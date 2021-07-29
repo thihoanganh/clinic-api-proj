@@ -11,7 +11,7 @@ namespace Clinic_Web_Api.Controllers
     {
         public IActionResult Index()
         {
-            return Ok("Hello World");
+            return Ok("Hello My Team !");
         }
     }
 }
