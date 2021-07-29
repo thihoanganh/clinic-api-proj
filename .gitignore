@@ -1,5 +1,6 @@
-*.csproj
+.vs/Clinic_Web_Api/v16/.suo
 *.sln
 bin
 obj
 *.user
+.vs/
