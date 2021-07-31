@@ -11,6 +11,6 @@ namespace Clinic_Web_Api.Models
         public int RoleId { get; set; }
 
         public virtual Role Role { get; set; }
-        public virtual staff Staff { get; set; }
+        public virtual Staff Staff { get; set; }
     }
 }

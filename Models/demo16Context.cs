@@ -49,7 +49,7 @@ namespace Clinic_Web_Api.Models
         public virtual DbSet<TypeOfMedicine> TypeOfMedicines { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserQuiz> UserQuizzes { get; set; }
-        public virtual DbSet<staff> staff { get; set; }
+        public virtual DbSet<Staff> staff { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -616,7 +616,7 @@ namespace Clinic_Web_Api.Models
                 entity.ToTable("UserQuiz");
 
                 entity.HasOne(d => d.Quiz)
-                    .WithMany(p => p.UserQuizzes)
+                    .WithMany(p => p.UserQuiz)
                     .HasForeignKey(d => d.QuizId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserQuiz_Quiz");
@@ -628,7 +628,7 @@ namespace Clinic_Web_Api.Models
                     .HasConstraintName("FK_UserQuiz_User");
             });
 
-            modelBuilder.Entity<staff>(entity =>
+            modelBuilder.Entity<Staff>(entity =>
             {
                 entity.ToTable("Staff");
 
@@ -651,7 +651,7 @@ namespace Clinic_Web_Api.Models
                 entity.Property(e => e.WokingStart).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Position)
-                    .WithMany(p => p.staff)
+                    .WithMany(p => p.Staffs)
                     .HasForeignKey(d => d.PositionId)
                     .HasConstraintName("FK_Staff_Position");
             });

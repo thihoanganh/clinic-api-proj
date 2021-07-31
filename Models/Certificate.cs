@@ -13,6 +13,6 @@ namespace Clinic_Web_Api.Models
         public DateTime? Created { get; set; }
         public int? StaffId { get; set; }
 
-        public virtual staff Staff { get; set; }
+        public virtual Staff Staff { get; set; }
     }
 }
