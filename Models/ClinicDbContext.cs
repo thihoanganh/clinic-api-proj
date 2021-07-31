@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Clinic_Web_Api.Models
 {
-    public partial class demo16Context : DbContext
+    public partial class ClinicDbContext : DbContext
     {
-        public demo16Context()
+        public ClinicDbContext()
         {
         }
 
-        public demo16Context(DbContextOptions<demo16Context> options)
+        public ClinicDbContext(DbContextOptions<ClinicDbContext> options)
             : base(options)
         {
         }
@@ -44,19 +44,18 @@ namespace Clinic_Web_Api.Models
         public virtual DbSet<Seminar> Seminars { get; set; }
         public virtual DbSet<SeminarEmail> SeminarEmails { get; set; }
         public virtual DbSet<SeminarRegistation> SeminarRegistations { get; set; }
-        public virtual DbSet<StaffRole> StaffRoles { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
         public virtual DbSet<TypeOfMedicine> TypeOfMedicines { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserQuiz> UserQuizzes { get; set; }
-        public virtual DbSet<Staff> staff { get; set; }
+        public virtual DbSet<Staff> Staff { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-ID9RBP3\\MSSQLSERVER01;Initial Catalog=demo16;Integrated Security=True");
+                optionsBuilder.UseSqlServer("Data Source=DESKTOP-ID9RBP3\\MSSQLSERVER01;Initial Catalog=demo17;Integrated Security=True");
             }
         }
 
@@ -548,24 +547,7 @@ namespace Clinic_Web_Api.Models
                     .HasConstraintName("FK_SeminarRegistation_Seminar");
             });
 
-            modelBuilder.Entity<StaffRole>(entity =>
-            {
-                entity.HasKey(e => new { e.StaffId, e.RoleId });
 
-                entity.ToTable("StaffRole");
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.StaffRoles)
-                    .HasForeignKey(d => d.RoleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_StaffRole_Role");
-
-                entity.HasOne(d => d.Staff)
-                    .WithMany(p => p.StaffRoles)
-                    .HasForeignKey(d => d.StaffId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_StaffRole_Staff");
-            });
 
             modelBuilder.Entity<Tag>(entity =>
             {
@@ -654,6 +636,12 @@ namespace Clinic_Web_Api.Models
                     .WithMany(p => p.Staffs)
                     .HasForeignKey(d => d.PositionId)
                     .HasConstraintName("FK_Staff_Position");
+
+                entity.HasOne(s => s.Role)
+                    .WithMany(s => s.Staffs)
+                    .HasForeignKey(s => s.RoleId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
             });
 
             OnModelCreatingPartial(modelBuilder);
