@@ -20,7 +20,7 @@ namespace Clinic_Web_Api.Models
         public string FullName { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public int? Phone { get; set; }
+        public string Phone { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
 
@@ -28,5 +28,6 @@ namespace Clinic_Web_Api.Models
         public virtual ICollection<Feedback> Feedbacks { get; set; }
         public virtual ICollection<LectureComment> LectureComments { get; set; }
         public virtual ICollection<UserQuiz> UserQuizzes { get; set; }
+
     }
 }

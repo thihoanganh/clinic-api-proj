@@ -36,6 +36,8 @@ namespace Clinic_Web_Api
             services.AddTransient<ClinicDbContext>();
             services.AddTransient<IStaffService, StaffService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ISeminarService, SeminaService>();
+
 
 
 
@@ -79,6 +81,7 @@ namespace Clinic_Web_Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 

@@ -490,7 +490,7 @@ namespace Clinic_Web_Api.Models
                     .HasMaxLength(500)
                     .IsFixedLength(false);
 
-                entity.HasOne(d => d.IdNavigation)
+                entity.HasOne(d => d.SeminarEmail)
                     .WithOne(p => p.Seminar)
                     .HasPrincipalKey<SeminarEmail>(p => p.SeminarId)
                     .HasForeignKey<Seminar>(d => d.Id)
@@ -514,7 +514,7 @@ namespace Clinic_Web_Api.Models
             {
                 entity.ToTable("SeminarRegistation");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(100)
@@ -529,6 +529,9 @@ namespace Clinic_Web_Api.Models
                     .WithMany(p => p.SeminarRegistations)
                     .HasForeignKey(d => d.SeminarId)
                     .HasConstraintName("FK_SeminarRegistation_Seminar");
+
+
+
             });
 
 

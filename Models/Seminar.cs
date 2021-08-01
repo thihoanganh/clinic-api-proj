@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
@@ -24,7 +26,7 @@ namespace Clinic_Web_Api.Models
         public string Contact { get; set; }
         public string Poster { get; set; }
 
-        public virtual SeminarEmail IdNavigation { get; set; }
+        public virtual SeminarEmail SeminarEmail { get; set; }
         public virtual ICollection<Feedback> Feedbacks { get; set; }
         public virtual ICollection<SeminarRegistation> SeminarRegistations { get; set; }
     }

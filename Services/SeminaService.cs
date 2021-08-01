@@ -1,0 +1,134 @@
+﻿using Clinic_Web_Api.Models;
+using Clinic_Web_Api.Services.Interface;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Clinic_Web_Api.Helpers;
+using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+
+namespace Clinic_Web_Api.Services
+{
+    public class SeminaService : ISeminarService
+    {
+        private readonly ClinicDbContext _db;
+        public SeminaService(ClinicDbContext db)
+        {
+            _db = db;
+        }
+        public int Create(Seminar smn)
+        {
+            try
+            {
+                _db.Seminars.Add(smn);
+                _db.SaveChanges();
+                return smn.Id;
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.Message);
+                return -1;
+            }
+        }
+
+        public int Delete(int id)
+        {
+
+            try
+            {
+                var smn = _db.Seminars.Where(s => s.Id == id).FirstOrDefault();
+                if (smn == null) return -1;
+                else
+                {
+                    _db.Seminars.Remove(smn);
+                    _db.SaveChanges();
+                    return id;
+                }
+            }
+            catch (Exception)
+            {
+
+                return -1;
+            }
+        }
+
+        public Seminar Find(int id)
+        {
+            try
+            {
+                return _db.Seminars.Find(id);
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
+        public List<Seminar> Find(string term)
+        {
+            var smn = _db.Seminars.Where(s => s.Title.Contains(term)).Include(s => s.SeminarEmail).ToList();
+            if (smn != null) return smn;
+            return null;
+        }
+
+        public List<Seminar> FindAll()
+        {
+            try
+            {
+                return _db.Seminars.ToList();
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
+        public List<SeminarRegistation> FindAllRegisterOfSeminar(int smnId)
+        {
+            try
+            {
+                return _db.SeminarRegistations.Where(r => r.SeminarId == smnId).ToList();
+            }
+            catch (Exception)
+            {
+                return null;
+                throw;
+            }
+        }
+
+        public int Register(SeminarRegistation sr)
+        {
+            try
+            {
+                if (Find(sr.SeminarId) == null) return -1;
+                else
+                {
+                    _db.SeminarRegistations.Add(sr);
+                    _db.SaveChanges();
+                    return sr.Id;
+                }
+
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+
+        }
+
+        public bool UpdateSeminar(Seminar smn)
+        {
+            var dbSmn = _db.Staff.Find(smn.Id);
+            if (dbSmn == null) return false;
+            else
+            {
+                _db.Entry(dbSmn).CurrentValues.SetValues(smn);
+                _db.SaveChanges();
+                return true;
+            }
+        }
+    }
+}

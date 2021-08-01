@@ -9,11 +9,12 @@ namespace Clinic_Web_Api.Models
     {
         public int Id { get; set; }
         public string Fname { get; set; }
-        public int? Phone { get; set; }
+        public string Phone { get; set; }
         public bool? Gender { get; set; }
         public string Email { get; set; }
-        public int? SeminarId { get; set; }
+        public int SeminarId { get; set; }
 
         public virtual Seminar Seminar { get; set; }
+
     }
 }
