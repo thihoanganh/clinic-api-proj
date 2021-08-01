@@ -4,14 +4,16 @@ using Clinic_Web_Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Clinic_Web_Api.Migrations
 {
     [DbContext(typeof(ClinicDbContext))]
-    partial class ClinicDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210731081719_removeCertificateTbl")]
+    partial class removeCertificateTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,8 +31,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Content")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(300)")
+                        .IsFixedLength(true);
 
                     b.Property<int?>("Index")
                         .HasColumnType("int");
@@ -57,8 +59,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(500)")
+                        .IsFixedLength(true);
 
                     b.HasKey("Id");
 
@@ -143,8 +145,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Content")
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(1000)")
+                        .IsFixedLength(true);
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime");
@@ -185,26 +187,26 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(200)")
+                        .IsFixedLength(true);
 
                     b.Property<string>("ModifyBy")
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(200)")
+                        .IsFixedLength(true);
 
                     b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("datetime");
 
                     b.Property<string>("Name")
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(500)")
+                        .IsFixedLength(true);
 
                     b.Property<string>("Sumary")
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(1000)")
+                        .IsFixedLength(true);
 
                     b.HasKey("Id");
 
@@ -222,8 +224,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(300)")
+                        .IsFixedLength(true);
 
                     b.HasKey("Id");
 
@@ -239,8 +241,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Content")
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(500)")
+                        .IsFixedLength(true);
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime");
@@ -272,8 +274,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(100)")
+                        .IsFixedLength(true);
 
                     b.HasKey("Id");
 
@@ -289,8 +291,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(200)")
+                        .IsFixedLength(true);
 
                     b.HasKey("Id");
 
@@ -400,8 +402,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(300)")
+                        .IsFixedLength(true);
 
                     b.Property<long?>("Salary")
                         .HasColumnType("bigint");
@@ -442,8 +444,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(1000)")
+                        .IsFixedLength(true);
 
                     b.Property<int?>("QuizId")
                         .HasColumnType("int");
@@ -583,8 +585,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(100)")
+                        .IsFixedLength(true);
 
                     b.HasKey("Id");
 
@@ -656,8 +658,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Contact")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(300)")
+                        .IsFixedLength(true);
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
@@ -667,31 +669,31 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Method")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(100)")
+                        .IsFixedLength(true);
 
                     b.Property<string>("Place")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(300)")
+                        .IsFixedLength(true);
 
                     b.Property<string>("Poster")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(300)")
+                        .IsFixedLength(true);
 
                     b.Property<string>("Speaker")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(100)")
+                        .IsFixedLength(true);
 
                     b.Property<DateTime?>("StartAt")
                         .HasColumnType("datetime");
 
                     b.Property<string>("Title")
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(500)")
+                        .IsFixedLength(true);
 
                     b.HasKey("Id");
 
@@ -713,8 +715,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Title")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(300)")
+                        .IsFixedLength(true);
 
                     b.HasKey("Id");
 
@@ -731,14 +733,14 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Email")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(100)")
+                        .IsFixedLength(true);
 
                     b.Property<string>("Fname")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
+                        .HasColumnType("nchar(300)")
                         .HasColumnName("FName")
-                        .IsFixedLength(false);
+                        .IsFixedLength(true);
 
                     b.Property<bool?>("Gender")
                         .HasColumnType("bit");
@@ -768,8 +770,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Email")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(100)")
+                        .IsFixedLength(true);
 
                     b.Property<bool?>("Gender")
                         .HasColumnType("bit");
@@ -780,8 +782,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Password")
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(500)")
+                        .IsFixedLength(true);
 
                     b.Property<int?>("PositionId")
                         .HasColumnType("int");
@@ -794,8 +796,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Username")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(100)")
+                        .IsFixedLength(true);
 
                     b.Property<DateTime?>("WokingStart")
                         .HasColumnType("datetime");
@@ -821,8 +823,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Name")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(300)")
+                        .IsFixedLength(true);
 
                     b.HasKey("Id");
 
@@ -867,8 +869,8 @@ namespace Clinic_Web_Api.Migrations
 
                     b.Property<string>("Password")
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
-                        .IsFixedLength(false);
+                        .HasColumnType("nchar(500)")
+                        .IsFixedLength(true);
 
                     b.Property<int?>("Phone")
                         .HasColumnType("int");

@@ -20,16 +20,28 @@ namespace Clinic_Web_Api.Helpers
             Configuration = conf;
         }
 
-        public string GenerateJwttoken(Staff staff)
+        public string GenerateJwttoken(Object obj)
         {
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:key"]));
             var credential = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
-            var claims = new List<Claim>()
-                    {
-                        new Claim("Username",staff.Username),
-                        new Claim(ClaimTypes.Role,staff.Role.Name)
-                    };
+            var claims = new List<Claim>();
+            if (obj.GetType() == typeof(Staff))
+            {
+                // require two claim with object of staff 
+                // username & role
+                var staff = obj as Staff;
+                claims.Add(new Claim("Username", staff.Username));
+                claims.Add(new Claim(ClaimTypes.Role, staff.Role.Name));
+            }
+            else
+            {
+                // it's user
+                // just claims with username of user
+                var user = obj as User;
+                claims.Add(new Claim("Username", user.Username));
+            }
+
 
             var tokenOptions = new JwtSecurityToken(
                     issuer: Configuration["Jwt:Issuer"],

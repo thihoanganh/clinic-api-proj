@@ -34,7 +34,9 @@ namespace Clinic_Web_Api
             services.AddControllers();
             // DI
             services.AddTransient<ClinicDbContext>();
-            services.AddTransient<ILoginService, LoginService>();
+            services.AddTransient<IStaffService, StaffService>();
+            services.AddTransient<IUserService, UserService>();
+
 
 
             // Jwt config
@@ -52,6 +54,11 @@ namespace Clinic_Web_Api
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                  };
              });
+            // ignore reference loop ef
+            services.AddControllersWithViews()
+             .AddNewtonsoftJson(options =>
+             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+         );
             services.AddCors();
         }
 

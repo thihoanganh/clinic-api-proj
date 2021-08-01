@@ -10,6 +10,7 @@ namespace Clinic_Web_Api.Models
     {
         public ClinicDbContext()
         {
+
         }
 
         public ClinicDbContext(DbContextOptions<ClinicDbContext> options)
@@ -20,7 +21,6 @@ namespace Clinic_Web_Api.Models
         public virtual DbSet<Answer> Answers { get; set; }
         public virtual DbSet<Attachment> Attachments { get; set; }
         public virtual DbSet<Brand> Brands { get; set; }
-        public virtual DbSet<Certificate> Certificates { get; set; }
         public virtual DbSet<DetailOrder> DetailOrders { get; set; }
         public virtual DbSet<DiscountEvent> DiscountEvents { get; set; }
         public virtual DbSet<Feedback> Feedbacks { get; set; }
@@ -55,7 +55,7 @@ namespace Clinic_Web_Api.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-ID9RBP3\\MSSQLSERVER01;Initial Catalog=demo17;Integrated Security=True");
+                optionsBuilder.UseSqlServer("Data Source=DESKTOP-ID9RBP3\\MSSQLSERVER01;Initial Catalog=demo17;Integrated Security=true");
             }
         }
 
@@ -69,7 +69,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Content)
                     .HasMaxLength(300)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.Answers)
@@ -83,7 +83,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(500)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.HasOne(d => d.Lecture)
                     .WithMany(p => p.Attachments)
@@ -101,23 +101,7 @@ namespace Clinic_Web_Api.Models
                     .HasColumnName("Brand");
             });
 
-            modelBuilder.Entity<Certificate>(entity =>
-            {
-                entity.ToTable("Certificate");
 
-                entity.Property(e => e.Created).HasColumnType("datetime");
-
-                entity.Property(e => e.Name).HasMaxLength(300);
-
-                entity.Property(e => e.Place)
-                    .HasMaxLength(300)
-                    .IsFixedLength(true);
-
-                entity.HasOne(d => d.Staff)
-                    .WithMany(p => p.Certificates)
-                    .HasForeignKey(d => d.StaffId)
-                    .HasConstraintName("FK_Certificate_Staff");
-            });
 
             modelBuilder.Entity<DetailOrder>(entity =>
             {
@@ -157,7 +141,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Content)
                     .HasMaxLength(1000)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
@@ -180,21 +164,21 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.CreatedBy)
                     .HasMaxLength(200)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.ModifyBy)
                     .HasMaxLength(200)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.ModifyDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(500)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.Sumary)
                     .HasMaxLength(1000)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.HasOne(d => d.Cate)
                     .WithMany(p => p.Lectures)
@@ -208,7 +192,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(300)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
             });
 
             modelBuilder.Entity<LectureComment>(entity =>
@@ -217,7 +201,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Content)
                     .HasMaxLength(500)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
@@ -238,7 +222,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(100)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
             });
 
             modelBuilder.Entity<MachineCategory>(entity =>
@@ -247,7 +231,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(200)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
             });
 
             modelBuilder.Entity<Medicine>(entity =>
@@ -316,7 +300,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(300)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
             });
 
             modelBuilder.Entity<Price>(entity =>
@@ -334,7 +318,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(1000)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.HasOne(d => d.Quiz)
                     .WithMany(p => p.Questions)
@@ -431,7 +415,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(100)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
             });
 
             modelBuilder.Entity<ScientificEquipment>(entity =>
@@ -480,31 +464,31 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Contact)
                     .HasMaxLength(300)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.EndAt).HasColumnType("datetime");
 
                 entity.Property(e => e.Method)
                     .HasMaxLength(100)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.Place)
                     .HasMaxLength(300)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.Poster)
                     .HasMaxLength(300)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.Speaker)
                     .HasMaxLength(100)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.StartAt).HasColumnType("datetime");
 
                 entity.Property(e => e.Title)
                     .HasMaxLength(500)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.HasOne(d => d.IdNavigation)
                     .WithOne(p => p.Seminar)
@@ -523,7 +507,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Title)
                     .HasMaxLength(300)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
             });
 
             modelBuilder.Entity<SeminarRegistation>(entity =>
@@ -534,12 +518,12 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(100)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.Fname)
                     .HasMaxLength(300)
                     .HasColumnName("FName")
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.HasOne(d => d.Seminar)
                     .WithMany(p => p.SeminarRegistations)
@@ -555,7 +539,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(300)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.HasOne(d => d.Lecture)
                     .WithMany(p => p.Tags)
@@ -586,7 +570,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Password)
                     .HasMaxLength(500)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.Username).HasMaxLength(300);
             });
@@ -618,17 +602,17 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(100)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.Name).HasMaxLength(300);
 
                 entity.Property(e => e.Password)
                     .HasMaxLength(500)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.Username)
                     .HasMaxLength(100)
-                    .IsFixedLength(true);
+                    .IsFixedLength(false);
 
                 entity.Property(e => e.WokingStart).HasColumnType("datetime");
 
