@@ -10,11 +10,13 @@ namespace Clinic_Web_Api.Models
         public int Id { get; set; }
         public string Content { get; set; }
         public double? SatisfiedPercent { get; set; }
-        public int? UserId { get; set; }
+        public string Feeling { get; set; }
+        public string Answer1 { get; set; }
+        public string Answer2 { get; set; }
+        public string Answer3 { get; set; }
         public DateTime? CreatedDate { get; set; }
-        public int? SeminarId { get; set; }
+        public int SeminarId { get; set; }
 
         public virtual Seminar Seminar { get; set; }
-        public virtual User User { get; set; }
     }
 }

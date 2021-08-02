@@ -16,5 +16,13 @@ namespace Clinic_Web_Api.Services.Interface
         List<Seminar> FindAll();
         int Register(SeminarRegistation sr);
         List<SeminarRegistation> FindAllRegisterOfSeminar(int smnId);
+        int Feedback(Feedback fb);
+        List<Feedback> GetSeminarFeedbacks(int smnId);
+        double? Evaluate(int smnId);
+        bool CreateEmail(SeminarEmail se);
+        List<SeminarEmail> GetAllEmails(int smnId);
+        SeminarEmail UpdateEmail(SeminarEmail se);
+        bool DeleteEmail(int id);
+
     }
 }

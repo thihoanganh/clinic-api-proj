@@ -105,14 +105,64 @@ namespace Clinic_Web_Api.Controllers
         }
 
         [HttpGet("{id}/registers")]
-        public IActionResult FindRegistered(int id)
+        public IActionResult GetRegistereds(int id)
         {
             var rs = _smnService.FindAllRegisterOfSeminar(id);
             return Ok(new { result = rs, count = rs.Count() });
         }
 
+        [HttpPost("feedback")]
+        public IActionResult Feedback(Feedback fb)
+        {
+            var rs = _smnService.Feedback(fb);
+            if (rs != -1) return Ok(new { result = "success", id = rs });
+            else return BadRequest(new { result = "error", msg = "can not create feedback" });
+        }
 
+        [HttpGet("{id}/feedbacks")]
+        public IActionResult GetFeedbacks(int id)
+        {
+            var rs = _smnService.GetSeminarFeedbacks(id);
+            return Ok(new { result = rs, count = rs.Count() });
+        }
 
+        [HttpGet("{id}/evaluate")]
+        public IActionResult GetEvaluate(int id)
+        {
+            var rs = _smnService.Evaluate(id);
+            if (rs == -1) return BadRequest(new { result = "error", msg = "seminar not found" });
+            else return Ok(new { result = "success", percent = rs });
+        }
+
+        [HttpPost("{id}/email")]
+        public IActionResult CreateEmail(SeminarEmail se)
+        {
+            if (_smnService.CreateEmail(se)) return Ok(new { result = "success" });
+            else return BadRequest(new { result = "error", msg = "can not create email" });
+        }
+
+        [HttpDelete("email/{id}")]
+        public IActionResult DeleteEmail(int id)
+        {
+            if (_smnService.DeleteEmail(id)) return Ok(new { result = "success" });
+            else return BadRequest(new { result = "error", msg = "can not delete email" });
+        }
+
+        [HttpPut("email")]
+        public IActionResult UpdateEmail(SeminarEmail se)
+        {
+            var rs = _smnService.UpdateEmail(se);
+            if (rs == null) return BadRequest(new { result = "error", msg = "can not update email" });
+            else return Ok(new { result = "success", email = rs });
+        }
+
+        [HttpGet("{id}/emails")]
+        public IActionResult GetEmails(int id)
+        {
+            var rs = _smnService.GetAllEmails(id);
+            return Ok(new { emails = rs });
+
+        }
 
     }
 }

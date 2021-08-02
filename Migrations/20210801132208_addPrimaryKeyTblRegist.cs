@@ -38,14 +38,14 @@ namespace Clinic_Web_Api.Migrations
                 oldType: "int",
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "SeminarRegistation",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .Annotation("SqlServer:Identity", "1, 1");
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "SeminarRegistation",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .Annotation("SqlServer:Identity", "1, 1");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_SeminarRegistation_Seminar",

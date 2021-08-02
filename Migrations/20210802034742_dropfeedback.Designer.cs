@@ -4,14 +4,16 @@ using Clinic_Web_Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Clinic_Web_Api.Migrations
 {
     [DbContext(typeof(ClinicDbContext))]
-    partial class ClinicDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210802034742_dropfeedback")]
+    partial class dropfeedback
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -134,46 +136,6 @@ namespace Clinic_Web_Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DiscountEvent");
-                });
-
-            modelBuilder.Entity("Clinic_Web_Api.Models.Feedback", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Answer1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Answer2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Answer3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Content")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
-                        .IsFixedLength(false);
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("Feeling")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("SatisfiedPercent")
-                        .HasColumnType("float");
-
-                    b.Property<int?>("SeminarId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SeminarId");
-
-                    b.ToTable("Feedback");
                 });
 
             modelBuilder.Entity("Clinic_Web_Api.Models.Lecture", b =>
@@ -957,16 +919,6 @@ namespace Clinic_Web_Api.Migrations
                     b.Navigation("DiscountEvent");
                 });
 
-            modelBuilder.Entity("Clinic_Web_Api.Models.Feedback", b =>
-                {
-                    b.HasOne("Clinic_Web_Api.Models.Seminar", "Seminar")
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("SeminarId")
-                        .HasConstraintName("FK_Feedback_Seminar");
-
-                    b.Navigation("Seminar");
-                });
-
             modelBuilder.Entity("Clinic_Web_Api.Models.Lecture", b =>
                 {
                     b.HasOne("Clinic_Web_Api.Models.LectureCategory", "Cate")
@@ -1315,8 +1267,6 @@ namespace Clinic_Web_Api.Migrations
 
             modelBuilder.Entity("Clinic_Web_Api.Models.Seminar", b =>
                 {
-                    b.Navigation("Feedbacks");
-
                     b.Navigation("SeminarRegistations");
                 });
 

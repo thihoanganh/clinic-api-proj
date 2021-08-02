@@ -130,5 +130,91 @@ namespace Clinic_Web_Api.Services
                 return true;
             }
         }
+
+        public int Feedback(Feedback fb)
+        {
+            try
+            {
+                fb.CreatedDate = DateTime.Now;
+                if (Find(fb.SeminarId) == null) return -1;
+                else
+                {
+                    _db.Feedbacks.Add(fb);
+                    _db.SaveChanges();
+                    return fb.Id;
+                }
+
+            }
+            catch (Exception)
+            {
+                return -1;
+                throw;
+
+            }
+        }
+
+        public List<Feedback> GetSeminarFeedbacks(int smnId)
+        {
+            return _db.Feedbacks.Where(f => f.SeminarId == smnId).ToList();
+        }
+        public double? Evaluate(int smnId)
+        {
+            if (Find(smnId) == null) return -1;
+            else return _db.Feedbacks.Where(f => f.SeminarId == smnId).Average(f => f.SatisfiedPercent);
+
+        }
+
+        public bool CreateEmail(SeminarEmail se)
+        {
+            if (Find(se.SeminarId) == null) return false;
+            else
+            {
+                try
+                {
+                    _db.SeminarEmails.Add(se);
+                    _db.SaveChanges();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                    throw;
+                }
+            }
+        }
+        public bool DeleteEmail(int id)
+        {
+            try
+            {
+                _db.SeminarEmails.Remove(_db.SeminarEmails.Find(id));
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
+            }
+        }
+
+        public SeminarEmail UpdateEmail(SeminarEmail se)
+        {
+            var dbSe = _db.SeminarEmails.Find(se.Id);
+            if (dbSe == null) return null;
+            else
+            {
+                _db.Entry(dbSe).CurrentValues.SetValues(se);
+                _db.SaveChanges();
+                return se;
+            }
+        }
+
+        public List<SeminarEmail> GetAllEmails(int smnId)
+        {
+            return _db.SeminarEmails.Where(se => se.SeminarId == smnId).ToList();
+        }
     }
 }
+
+
+

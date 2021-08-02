@@ -137,7 +137,7 @@ namespace Clinic_Web_Api.Models
             {
                 entity.ToTable("Feedback");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Content)
                     .HasMaxLength(1000)
@@ -149,11 +149,7 @@ namespace Clinic_Web_Api.Models
                     .WithMany(p => p.Feedbacks)
                     .HasForeignKey(d => d.SeminarId)
                     .HasConstraintName("FK_Feedback_Seminar");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Feedbacks)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Feedback_User");
+                entity.HasKey(e => e.Id);
             });
 
             modelBuilder.Entity<Lecture>(entity =>
