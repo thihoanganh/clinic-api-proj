@@ -29,5 +29,6 @@ namespace Clinic_Web_Api.Models
         public virtual Origin Origin { get; set; }
         public virtual Price Price { get; set; }
         public virtual ICollection<ReceiptScientificEquipment> ReceiptScientificEquipments { get; set; }
+        public virtual ICollection<PriceScientificEquipment> PriceScientificEquipments { get; set; }
     }
 }

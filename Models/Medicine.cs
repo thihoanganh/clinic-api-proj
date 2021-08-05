@@ -27,12 +27,13 @@ namespace Clinic_Web_Api.Models
         public int? OriginId { get; set; }
         public int? TypeOfId { get; set; }
         public int? BrandId { get; set; }
-        public int? Priceid { get; set; }
+
 
         public virtual Brand Brand { get; set; }
         public virtual Origin Origin { get; set; }
         public virtual Price Price { get; set; }
         public virtual TypeOfMedicine TypeOf { get; set; }
         public virtual ICollection<ReceiptMedicine> ReceiptMedicines { get; set; }
+        public virtual ICollection<PriceMedicine> PriceMedicines { get; set; }
     }
 }

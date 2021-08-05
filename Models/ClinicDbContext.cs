@@ -40,8 +40,10 @@ namespace Clinic_Web_Api.Models
         public virtual DbSet<ReceiptScientificEquipment> ReceiptScientificEquipments { get; set; }
         public virtual DbSet<ReceiptScientificEquipmentIdOrderDetail> ReceiptScientificEquipmentIdOrderDetails { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<PriceScientificEquipment> PriceScientificEquipments { get; set; }
         public virtual DbSet<ScientificEquipment> ScientificEquipments { get; set; }
         public virtual DbSet<Seminar> Seminars { get; set; }
+        public virtual DbSet<PriceMedicine> PriceMedicines { get; set; }
         public virtual DbSet<SeminarEmail> SeminarEmails { get; set; }
         public virtual DbSet<SeminarRegistation> SeminarRegistations { get; set; }
         public virtual DbSet<TypeOfMedicine> TypeOfMedicines { get; set; }
@@ -53,8 +55,7 @@ namespace Clinic_Web_Api.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-ID9RBP3\\MSSQLSERVER01;Initial Catalog=demo17;Integrated Security=true");
+                //optionsBuilder.UseSqlServer("Data Source=DESKTOP-ID9RBP3\\MSSQLSERVER01;Initial Catalog=demo17;Integrated Security=true");
             }
         }
 
@@ -74,6 +75,34 @@ namespace Clinic_Web_Api.Models
                     .WithMany(p => p.Answers)
                     .HasForeignKey(d => d.QuestionId)
                     .HasConstraintName("FK_Answer_Question");
+            });
+
+            modelBuilder.Entity<PriceMedicine>(entity =>
+            {
+                entity.ToTable("PriceMedicine");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Medicine)
+                    .WithMany(p => p.PriceMedicines)
+                    .HasForeignKey(d => d.MedicineId)
+                    .HasConstraintName("FK_PriceMedicine_Medicine");
+            });
+
+            modelBuilder.Entity<PriceScientificEquipment>(entity =>
+            {
+                entity.ToTable("PriceScientificEquipment");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.HasOne(d => d.ScientificEquipment)
+                    .WithMany(p => p.PriceScientificEquipments)
+                    .HasForeignKey(d => d.ScientificEquipmentId)
+                    .HasConstraintName("FK_PriceScientificEquipment_ScientificEquipment");
             });
 
             modelBuilder.Entity<Attachment>(entity =>
@@ -114,11 +143,6 @@ namespace Clinic_Web_Api.Models
                     .WithMany(p => p.DetailOrders)
                     .HasForeignKey(d => d.CustomerId)
                     .HasConstraintName("FK_DetailOrder_Customer");
-
-                entity.HasOne(d => d.DiscountEvent)
-                    .WithMany(p => p.DetailOrders)
-                    .HasForeignKey(d => d.DiscountEventId)
-                    .HasConstraintName("FK_DetailOrder_DiscountEvent");
             });
 
             modelBuilder.Entity<DiscountEvent>(entity =>
@@ -270,7 +294,6 @@ namespace Clinic_Web_Api.Models
 
                 entity.HasOne(d => d.Price)
                     .WithMany(p => p.Medicines)
-                    .HasForeignKey(d => d.Priceid)
                     .HasConstraintName("FK_Medicine_Price");
 
                 entity.HasOne(d => d.TypeOf)

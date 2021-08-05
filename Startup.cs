@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,6 +35,8 @@ namespace Clinic_Web_Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            var defaultConnection = Configuration["ConnectionStrings:DefaultConnection"];
+            services.AddDbContext<ClinicDbContext>(options => options.UseSqlServer(defaultConnection));
             // DI
             services.AddTransient<ClinicDbContext>();
             services.AddTransient<IStaffService, StaffService>();
@@ -42,6 +45,11 @@ namespace Clinic_Web_Api
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ILectureService, LectureService>();
 
+            services.AddScoped<IReceiptMedicineService, ReceiptMedicineServiceImplement>();
+            services.AddScoped<IDetailOrderService, DetailOrderServiceImplement>();
+            services.AddScoped<IReceiptScientificEquipmentService, ReceiptScientificEquipmentServiceImplement>();
+            services.AddScoped<IPriceService, PriceMedicineServiceImplement>();
+            services.AddScoped<IPriceService, PriceScientificEquipServiceImplement>();
 
 
 
