@@ -58,7 +58,7 @@ namespace Clinic_Web_Api.Controllers
             {
                 return Ok(new { delId = rs });
             }
-            return NotFound(new { msg = "Staff not found." });
+            return NotFound(new { msg = "Staff not found" });
         }
 
         [HttpGet]
