@@ -34,7 +34,7 @@ namespace Clinic_Web_Api.Controllers.Admin
                 {
                     return Ok(new { staff_id = staffId });
                 }
-                return BadRequest(new { msg = "Cannot create staff" });
+                return BadRequest(new { msg = "Cannot create staff." });
             }
         }
 
