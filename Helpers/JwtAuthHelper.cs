@@ -32,6 +32,7 @@ namespace Clinic_Web_Api.Helpers
                 // username & role
                 var staff = obj as Staff;
                 claims.Add(new Claim("Username", staff.Username));
+                claims.Add(new Claim("IsAdmin", staff.Role.Name == "Admin" ? "true" : "false", "bool"));
                 claims.Add(new Claim(ClaimTypes.Role, staff.Role.Name));
             }
             else

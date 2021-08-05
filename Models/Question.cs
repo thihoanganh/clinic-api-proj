@@ -14,7 +14,6 @@ namespace Clinic_Web_Api.Models
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public int? CorrectAnsw { get; set; }
         public int? QuizId { get; set; }
 
         public virtual Quiz Quiz { get; set; }

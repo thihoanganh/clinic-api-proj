@@ -4,14 +4,16 @@ using Clinic_Web_Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Clinic_Web_Api.Migrations
 {
     [DbContext(typeof(ClinicDbContext))]
-    partial class ClinicDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210802132543_quizModify")]
+    partial class quizModify
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,15 +61,6 @@ namespace Clinic_Web_Api.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)")
                         .IsFixedLength(false);
-
-                    b.Property<string>("OriginName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Size")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -285,7 +278,7 @@ namespace Clinic_Web_Api.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Bonus")
+                    b.Property<double?>("Bonus")
                         .HasColumnType("float");
 
                     b.Property<string>("Name")
@@ -891,7 +884,7 @@ namespace Clinic_Web_Api.Migrations
                     b.Property<int?>("NoAnswer")
                         .HasColumnType("int");
 
-                    b.Property<double>("Percent")
+                    b.Property<double?>("Percent")
                         .HasColumnType("float");
 
                     b.Property<int?>("TotalQuestion")

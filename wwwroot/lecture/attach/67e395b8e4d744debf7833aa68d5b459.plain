@@ -1,0 +1,302 @@
+=========STAFF API =============
+- staff login 
+-[post] /api/staff/login 
+-expected: body {"username":"xxx","password":"yyy"} ) 
+----------------------------
+- create staff
+[post] /api/staff
+-expected: body {
+    "Name":"John",
+    "Dob":"1999-01-05",
+    "gender":true,
+    "Username":"johnabc",
+    "password":"123123",
+    "Email":"john@gmai.com",
+    "wokingstart":"2021-05-05",
+    "positionid":2
+}
+----------------------------
+- get all staff
+[get] /api/staff
+----------------------------
+- get staff by id
+[get] /api/staff/{id}
+----------------------------
+- get staff by name or username (search as part of name or username)
+[get] /api/admin/staff/search?q={term}
+----------------------------
+- update staff
+[put] /api/admin/staff
+-expected: body {
+    "Id":1,
+    "Name":"John",
+    "Dob":"1999-01-05",
+    "gender":true,
+    "Username":"johnabc",
+    "password":"123123",
+    "Email":"john@gmai.com",
+    "wokingstart":"2021-05-05",
+    "positionid":2
+}
+----------------------------
+// delete staff 
+[delete]/api/admin/account/{id}
+----------------------------
+=========USER API =============
+----------------------------
+- user login 
+-[post] /api/user/login 
+-expected: body {"username":"xxx","password":"yyy"} ) 
+----------------------------
+- create user
+[post] /api/user
+-expected: body {
+    "fullname":"Marry Ana ",
+    "username":"ana123",
+    "password":"123123",
+    "email":"ana@gmai.com",
+     "phone":"4552255575",
+     "address":"07A,NewYork"    
+}
+- get user by id
+[get] /api/user/{id}
+----------------------------
+- get userby name or username (search as part of name or username)
+[get] /api/user/search?q={term}
+----------------------------
+- update user
+[put] /api/user
+-expected: body {
+    "id":1,
+    "fullname":"Marry Ana ",
+    "username":"ana123",
+    "password":"123123",
+    "email":"ana@gmai.com",
+     "phone":"4552255575",
+     "address":"07A,NewYork"    
+}
+----------------------------
+// delete user
+[delete]/api/user/{id}
+
+----------------------------
+=========SEMINAR API =============
+----------------------------
+- create seminar
+[post] /api/seminar
+-expected: form-data
+key:seminar
+value: {
+"title":"xxxx",
+"speaker":"xxx",
+"method":"online",
+"content":"<p>Content</p>",
+"place":"LabA, Aptech School",
+"startat":"2021-05-12 13-00-00",
+"endat":"2021-05-12 16-00-00",
+"contact":"Mr.John +0811155554 john@gmail.com"
+}
+key:poster
+value:poster.jpg
+----------------------------
+- register seminar
+[post] /api/seminar/register
+-expected: body
+{
+"fname":"Joe",
+"Phone":"255478888",
+"gender":false,
+"email":"joe@gmail.com",
+"seminarid":5
+}
+----------------------------
+- find all registerd in a seminar by id
+[get] /api/seminar/{id}/registers
+----------------------------
+- create seminar feedback
+[post] /api/seminar/feedback
+-expected: body
+{
+"content":"this seminar is very good",
+"satisfiedpercent":80.5,
+"feeling":"Happy",
+"answer1":"Nothing",
+"answer2":"Nothing",
+"answer3":"Nothing",
+"seminarid":5
+}
+----------------------------
+- get seminar feedbacks
+[get] /api/seminar/{id}/feedbacks
+----------------------------
+- get seminar evaluate
+[get] /api/seminar/{id}/evaluate
+----------------------------
+- create email for seminar
+[post] /api/seminar/{id}/email
+-expected: body
+{
+"title":"You have successfully registered for the workshop",
+"content":"This content depends on admin create...",
+"seminarid":5
+}
+----------------------------
+-delete email 
+[delete] /api/seminar/email/{id}
+----------------------------
+- update email
+[put] /api/seminar/email
+-expected : body
+{
+{
+"id":1,
+"title":"You have successfully registered for the workshop",
+"content":"This content depends on admin create...",
+"seminarid":5
+}
+}
+----------------------------
+- get all emails for a seminar
+[get] /api/seminar/{id}/emails
+----------------------------
+=========LECTURE API =============
+----------------------------
+-create new lecture category
+[post] /api/lecture/category
+expected:body
+{
+"name":"Medical Mechine"
+}
+----------------------------
+-rename lecture category
+[put]/api/lecture/category/{id}?name=yournewname
+----------------------------
+- find all leture categories
+-[get] /api/lecture/categories
+----------------------------
+-delete lecture category
+[delete]/api/lecture/category/{id}
+----------------------------
+- create an attachment
+[post] /api/lecture/attach
+expected:form-data
+key:attach - value:your_attachment
+key:lectureId - value:your_lecture_id
+----------------------------
+- create the attachments
+[post] /api/lecture/attachs
+expected:form-data
+key:attachs - value:your_attachments
+key:lectureId - value:your_lecture_id
+----------------------------
+-delete lecture attach
+[delete]/api/lecture/attach/{id}
+----------------------------
+- get all attachs for a lecture
+[get]/api/lecture/{id}/attachs
+----------------------------
+- create quiz 
+[post]/api/lecture/quiz
+-expected:body
+
+{
+"duration":"10",
+"levelid":1,
+"lectureid":2,
+"questions":[
+{
+    "name":"Who is the invention of  Portable Fractional CO2 Laser Surgery Medical Machine 11 ?",
+    "answers":[
+        {
+            "content":"Doctor.John",
+            "iscorrect":false
+        },
+        {
+            "content":"Doctor.Micheal",
+            "iscorrect":true
+        },
+        {
+            "content":"Ms.Lisa",
+            "iscorrect":false
+        }
+    ]
+},
+{
+    "name":"What year was Portable Fractional CO2 Laser Surgery Medical Machine 11 invented ?",
+    "answers":[
+        {
+            "content":"1995",
+            "iscorrect":true
+        },
+        {
+            "content":"2000",
+            "iscorrect":false
+        },
+        {
+            "content":"2001",
+            "iscorrect":false
+        },
+          {
+            "content":"2005",
+            "iscorrect":false
+        }
+    ]
+}
+]
+}
+----------------------------
+- get all lecture quizzes 
+[get] /api/lecture/quizzes
+----------------------------
+- create user quiz
+[post] /api/lecture/quiz/submit
+-expected:body
+{
+    "userid":3,
+    "quizid":1,
+    "answers": [1,4]
+}
+----------------------------
+- get lecture quiz percent of specified user
+[get]/api/lecture/quiz/percent?userid={id}&lecid={id}
+----------------------------
+- get random quiz for user (this feature will not random an quiz that user has done)
+[get]/api/lecture/random/quiz?userid={id}&lecid={id}
+----------------------------
+-create lecture
+[post]/api/lecture?staffid={id}
+-exptected:body
+{
+    "name":"Viruses, Epidemics, and Pandemics",
+    "sumary":"Viruses are strange microscopic organisms that behave thought to be mostly parasitic in nature",
+    "content":"your html content here",
+    "cateid":4
+}
+
+----------------------------
+-delete lecture
+[delete]/api/lecture/{id}
+----------------------------
+-find all lecture
+[get]/api/lecture/all
+----------------------------
+- find lecture by cate
+[get]/api/lecture?cateid={id}
+----------------------------
+- find lecture by lecture id
+[get]/api/lecture/{lecid}
+----------------------------
+- create lecture comment
+[post]/api/lecture/comment
+-expected:body
+{
+    "userid":3,
+    "content":"this is good lecture for me",
+    "lectureid":2
+}
+----------------------------
+-get lecture comments
+[get]/api/lecture/{id}/comment
+
+
+

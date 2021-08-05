@@ -44,7 +44,6 @@ namespace Clinic_Web_Api.Models
         public virtual DbSet<Seminar> Seminars { get; set; }
         public virtual DbSet<SeminarEmail> SeminarEmails { get; set; }
         public virtual DbSet<SeminarRegistation> SeminarRegistations { get; set; }
-        public virtual DbSet<Tag> Tags { get; set; }
         public virtual DbSet<TypeOfMedicine> TypeOfMedicines { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserQuiz> UserQuizzes { get; set; }
@@ -528,22 +527,6 @@ namespace Clinic_Web_Api.Models
 
 
 
-            });
-
-
-
-            modelBuilder.Entity<Tag>(entity =>
-            {
-                entity.ToTable("Tag");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(300)
-                    .IsFixedLength(false);
-
-                entity.HasOne(d => d.Lecture)
-                    .WithMany(p => p.Tags)
-                    .HasForeignKey(d => d.LectureId)
-                    .HasConstraintName("FK_Tag_Lecture");
             });
 
             modelBuilder.Entity<TypeOfMedicine>(entity =>

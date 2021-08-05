@@ -19,12 +19,14 @@ namespace Clinic_Web_Api.Controllers
     {
         private readonly IWebHostEnvironment _evn;
         private readonly ISeminarService _smnService;
+        private readonly IEmailSender _mailSender;
 
 
-        public SeminarController(IWebHostEnvironment evn, ISeminarService smnService)
+        public SeminarController(IWebHostEnvironment evn, ISeminarService smnService, IEmailSender mailSender)
         {
             _evn = evn;
             _smnService = smnService;
+            _mailSender = mailSender;
         }
         [HttpPost]
         public IActionResult Create([FromForm] IFormFile poster, [FromForm] string seminar)
@@ -33,7 +35,7 @@ namespace Clinic_Web_Api.Controllers
             if (smn != null && poster != null)
             {
                 var fileHelper = new FileHelper(_evn);
-                var uploadFile = fileHelper.UploadFile(poster, "seminar/image");
+                var uploadFile = fileHelper.UploadPoster(poster, "seminar/image");
                 if (uploadFile != null)
                 {
                     // upload poster success
@@ -101,7 +103,18 @@ namespace Clinic_Web_Api.Controllers
         {
             var rs = _smnService.Register(sr);
             if (rs == -1) return BadRequest(new { result = "error", msg = "can not regist seminar for this user" });
-            return Ok(new { result = "success", id = rs });
+            else
+            {
+                // register successfully 
+                // send an email for that user
+                _smnService.GetAllEmails(sr.SeminarId).ToList().ForEach(e =>
+                {
+                    _mailSender.SendEmailAsync(sr.Email, e.Title, e.Content);
+                });
+
+
+                return Ok(new { result = "success", id = rs });
+            }
         }
 
         [HttpGet("{id}/registers")]

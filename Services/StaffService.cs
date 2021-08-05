@@ -29,7 +29,7 @@ namespace Clinic_Web_Api.Services
                 if (staff != null)
                 {
                     staff.Status = true;
-                    staff.Role = _db.Roles.Where(r => r.Id == 2).First();
+
                     staff.Position = _db.Positions.Where(p => p.Id == staff.PositionId).First();
                     staff.Password = BCrypt.Net.BCrypt.HashPassword(staff.Password);
                     _db.Staff.Add(staff);

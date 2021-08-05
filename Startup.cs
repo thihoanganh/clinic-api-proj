@@ -1,3 +1,5 @@
+using Clinic_Web_Api.Entities;
+using Clinic_Web_Api.Helpers;
 using Clinic_Web_Api.Middleware;
 using Clinic_Web_Api.Models;
 using Clinic_Web_Api.Services;
@@ -37,6 +39,10 @@ namespace Clinic_Web_Api
             services.AddTransient<IStaffService, StaffService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISeminarService, SeminaService>();
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<ILectureService, LectureService>();
+
+
 
 
 
@@ -62,6 +68,8 @@ namespace Clinic_Web_Api
              options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
          );
             services.AddCors();
+            var mailsettings = Configuration.GetSection("MailSettings");  // read config in appsetting.json
+            services.Configure<EmailSetting>(mailsettings);               // inject into EmailSetting 
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

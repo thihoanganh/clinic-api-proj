@@ -12,7 +12,7 @@ namespace Clinic_Web_Api.Models
         public int? TotalQuestion { get; set; }
         public int? CorrectAnswer { get; set; }
         public int? NoAnswer { get; set; }
-        public double? Percent { get; set; }
+        public double Percent { get; set; }
 
         public virtual Quiz Quiz { get; set; }
         public virtual User User { get; set; }

@@ -12,7 +12,6 @@ namespace Clinic_Web_Api.Models
             Attachments = new HashSet<Attachment>();
             LectureComments = new HashSet<LectureComment>();
             Quizzes = new HashSet<Quiz>();
-            Tags = new HashSet<Tag>();
         }
 
         public int Id { get; set; }
@@ -29,6 +28,5 @@ namespace Clinic_Web_Api.Models
         public virtual ICollection<Attachment> Attachments { get; set; }
         public virtual ICollection<LectureComment> LectureComments { get; set; }
         public virtual ICollection<Quiz> Quizzes { get; set; }
-        public virtual ICollection<Tag> Tags { get; set; }
     }
 }

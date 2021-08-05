@@ -14,7 +14,7 @@ namespace Clinic_Web_Api.Models
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public double? Bonus { get; set; }
+        public double Bonus { get; set; }
 
         public virtual ICollection<Quiz> Quizzes { get; set; }
     }

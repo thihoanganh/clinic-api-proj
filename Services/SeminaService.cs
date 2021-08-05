@@ -7,15 +7,19 @@ using System.Threading.Tasks;
 using Clinic_Web_Api.Helpers;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace Clinic_Web_Api.Services
 {
     public class SeminaService : ISeminarService
     {
+        private readonly IWebHostEnvironment _evn;
         private readonly ClinicDbContext _db;
-        public SeminaService(ClinicDbContext db)
+        public SeminaService(ClinicDbContext db, IWebHostEnvironment evn)
         {
             _db = db;
+            _evn = evn;
         }
         public int Create(Seminar smn)
         {
@@ -38,13 +42,16 @@ namespace Clinic_Web_Api.Services
             try
             {
                 var smn = _db.Seminars.Where(s => s.Id == id).FirstOrDefault();
-                if (smn == null) return -1;
-                else
+                var path = Path.Combine(_evn.WebRootPath, "lecture/attach", smn.Poster);
+
+                if (smn != null && System.IO.File.Exists(path))
                 {
                     _db.Seminars.Remove(smn);
                     _db.SaveChanges();
+                    System.IO.File.Delete(path);
                     return id;
                 }
+                return -1;
             }
             catch (Exception)
             {
