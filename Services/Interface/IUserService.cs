@@ -15,6 +15,8 @@ namespace Clinic_Web_Api.Services.Interface
         List<User> Find(string term);
         List<User> FindAll();
         string Login(string username, string password);
+        User IsUserExist(string username);
+        bool UpdateUserPassword(string username, string newPw);
 
     }
 }

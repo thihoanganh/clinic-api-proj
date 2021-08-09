@@ -14,9 +14,11 @@ namespace Clinic_Web_Api.Controllers
     public class UserController : ControllerBase
     {
         private IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IEmailSender _mailSender;
+        public UserController(IUserService userService, IEmailSender mailSender)
         {
             _userService = userService;
+            _mailSender = mailSender;
         }
         [HttpPost]
         public IActionResult CreateStaff([FromBody] User user)
@@ -34,6 +36,14 @@ namespace Clinic_Web_Api.Controllers
                 }
                 return BadRequest(new { result = "error", msg = "Cannot create user" });
             }
+        }
+
+        [HttpGet("exist")]
+        public IActionResult CheckUserExist(string username)
+        {
+            var user = _userService.IsUserExist(username);
+            if (user != null) return Ok(new { exist = true, username = user.Username, email = user.Email });
+            else return Ok(new { exist = false });
         }
 
         [HttpDelete("{id}")]
@@ -98,6 +108,31 @@ namespace Clinic_Web_Api.Controllers
             }
             return BadRequest(new { login = false });
 
+        }
+
+        [HttpGet("verify")]
+        public IActionResult SentEmailCode(string email)
+        {
+            var code = GenerateRandomNo();
+            _mailSender.SendEmailAsync(email, "Clinic-Reset Password", $"Your code verify is: <b>{code}</b>. Please don't share this for anyone !");
+            return Ok(new { status = true, code = code });
+
+        }
+
+        private int GenerateRandomNo()
+        {
+            int _min = 1000;
+            int _max = 9999;
+            Random _rdm = new Random();
+            return _rdm.Next(_min, _max);
+        }
+
+        [HttpPost("password/update")]
+        public IActionResult UpdateUsePassword([FromBody] UpdateUserPassword model)
+        {
+            var rs = _userService.UpdateUserPassword(model.Username, model.Password);
+            if (rs) return Ok(new { status = true });
+            else return Ok(new { status = false });
         }
     }
 }

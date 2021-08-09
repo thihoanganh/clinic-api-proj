@@ -58,10 +58,14 @@ namespace Clinic_Web_Api.Services
             {
                 if (user != null)
                 {
-                    user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-                    _db.Users.Add(user);
-                    _db.SaveChanges();
-                    return user.Id;
+                    if (IsUserExist(user.Username) == null) // user doesnt exist
+                    {
+                        // create user
+                        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                        _db.Users.Add(user);
+                        _db.SaveChanges();
+                        return user.Id;
+                    }
                 }
                 return -1;
 
@@ -71,6 +75,12 @@ namespace Clinic_Web_Api.Services
 
                 return -1;
             }
+        }
+
+        public User IsUserExist(string username)
+        {
+            var user = _db.Users.Where(u => u.Username == username).FirstOrDefault();
+            return user == null ? null : user;
         }
 
         /// <summary>
@@ -159,6 +169,20 @@ namespace Clinic_Web_Api.Services
                 return true;
             }
 
+        }
+        public bool UpdateUserPassword(string username, string newPw)
+        {
+            var user = _db.Users.Where(u => u.Username == username).FirstOrDefault();
+            if (user == null)
+            {
+                return false;
+            }
+            else
+            {
+                user.Password = BCrypt.Net.BCrypt.HashPassword(newPw);
+                _db.SaveChanges();
+                return true;
+            }
         }
     }
 }
