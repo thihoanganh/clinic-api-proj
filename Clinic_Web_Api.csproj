@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\lecture\attach\" />
-    <Folder Include="wwwroot\seminar\image\" />
   </ItemGroup>
 
 

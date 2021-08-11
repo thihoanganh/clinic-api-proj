@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Clinic_Web_Api.Services.Interface;
 using Clinic_Web_Api.Entities;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Clinic_Web_Api.Controllers
 {
@@ -62,10 +63,31 @@ namespace Clinic_Web_Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(int page)
         {
-            var rs = _smnService.FindAll();
-            return Ok(new { result = rs, count = rs.Count() });
+            var rs = _smnService.FindAll(page);
+
+
+            return Ok(new
+            {
+                result = rs.smns.Select(s => new
+                {
+                    id = s.Id,
+                    title = s.Title,
+                    speaker = s.Speaker,
+                    method = s.Method,
+                    content = s.Content,
+                    place = s.Place,
+                    startAt = s.StartAt,
+                    endAt = s.EndAt,
+                    contact = s.Content,
+                    poster = Path.Combine("https://localhost:5001", @"seminar/image", s.Poster),
+                    seminarEmail = _smnService.GetAllEmails(s.Id),
+                    totalFeedback = s.Feedbacks.Count(),
+                    totalRegistered = s.SeminarRegistations.Count(),
+                    evaluate = _smnService.Evaluate(s.Id)
+                }).ToList()
+            });
         }
 
         [HttpGet("{id}")]
@@ -107,11 +129,11 @@ namespace Clinic_Web_Api.Controllers
             {
                 // register successfully 
                 // send an email for that user
-                _smnService.GetAllEmails(sr.SeminarId).ToList().ForEach(e =>
+                var mail = _smnService.GetAllEmails(sr.SeminarId);
+                if (mail != null)
                 {
-                    _mailSender.SendEmailAsync(sr.Email, e.Title, e.Content);
-                });
-
+                    _mailSender.SendEmailAsync(sr.Email, mail.Title, mail.Content);
+                }
 
                 return Ok(new { result = "success", id = rs });
             }
@@ -174,7 +196,6 @@ namespace Clinic_Web_Api.Controllers
         {
             var rs = _smnService.GetAllEmails(id);
             return Ok(new { emails = rs });
-
         }
 
     }

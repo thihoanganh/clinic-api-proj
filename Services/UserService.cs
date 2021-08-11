@@ -138,16 +138,18 @@ namespace Clinic_Web_Api.Services
             }
         }
 
-        public List<User> FindAll()
+        public (List<User> users, int totalPage, int totalUsers) FindAll(int page)
         {
             try
             {
-                return _db.Users.ToList();
-
+                var Size = 5;
+                var TotalUsers = _db.Users.Count();
+                var TotalPage = (int)Math.Ceiling(((double)TotalUsers / Size));
+                return (_db.Users.OrderByDescending(a => a.Id).Skip((page - 1) * Size).Take(Size).ToList(), TotalPage, TotalUsers);
             }
             catch (Exception)
             {
-                return null;
+                return (null, -1, -1);
                 throw;
             }
         }

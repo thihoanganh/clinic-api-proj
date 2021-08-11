@@ -58,10 +58,10 @@ namespace Clinic_Web_Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(int page)
         {
-            var rs = _userService.FindAll();
-            return Ok(new { result = rs, count = rs.Count() });
+            var rs = _userService.FindAll(page);
+            return Ok(new { users = rs.users, count = rs.users.Count(), total_page = rs.totalPage, total_users = rs.totalUsers });
         }
 
         [HttpGet("{id}")]
