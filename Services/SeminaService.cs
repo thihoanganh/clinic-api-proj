@@ -80,16 +80,19 @@ namespace Clinic_Web_Api.Services
             return null;
         }
 
-        public List<Seminar> FindAll()
+        public (List<Seminar> smns, int totalPage, int totalStaffs) FindAll(int page)
         {
             try
             {
-                return _db.Seminars.ToList();
+                var Size = 6;
+                var TotalSmn = _db.Seminars.Count();
+                var TotalPage = (int)Math.Ceiling(((double)TotalSmn / Size));
+                return (_db.Seminars.Include(s => s.SeminarRegistations).AsNoTracking().Include(s => s.Feedbacks).OrderByDescending(a => a.Id).Skip((page - 1) * Size).Take(Size).ToList(), TotalPage, TotalSmn);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                return null;
+                Debug.WriteLine(ex.Message);
+                return (null, -1, -1);
             }
         }
 
@@ -216,9 +219,9 @@ namespace Clinic_Web_Api.Services
             }
         }
 
-        public List<SeminarEmail> GetAllEmails(int smnId)
+        public SeminarEmail GetAllEmails(int smnId)
         {
-            return _db.SeminarEmails.Where(se => se.SeminarId == smnId).ToList();
+            return _db.SeminarEmails.Where(se => se.SeminarId == smnId).FirstOrDefault();
         }
     }
 }

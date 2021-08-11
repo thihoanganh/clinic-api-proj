@@ -11,9 +11,6 @@ namespace Clinic_Web_Api.Models
         public string Content { get; set; }
         public double? SatisfiedPercent { get; set; }
         public string Feeling { get; set; }
-        public string Answer1 { get; set; }
-        public string Answer2 { get; set; }
-        public string Answer3 { get; set; }
         public DateTime? CreatedDate { get; set; }
         public int SeminarId { get; set; }
 

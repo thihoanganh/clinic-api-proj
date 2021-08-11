@@ -13,7 +13,7 @@ namespace Clinic_Web_Api.Services.Interface
         bool Update(User stafuserf);
         User Find(int id);
         List<User> Find(string term);
-        List<User> FindAll();
+        (List<User> users, int totalPage, int totalUsers) FindAll(int page);
         string Login(string username, string password);
         User IsUserExist(string username);
         bool UpdateUserPassword(string username, string newPw);

@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Clinic_Web_Api.Entities;
-//test git
 namespace Clinic_Web_Api.Controllers.Admin
 {
     [Route("api/[controller]")]
@@ -50,10 +49,10 @@ namespace Clinic_Web_Api.Controllers.Admin
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(int page)
         {
-            var rs = _staffService.FindAll();
-            return Ok(new { result = rs, count = rs.Count() });
+            var rs = _staffService.FindAll(page);
+            return Ok(new { staffs = rs.staffs, count = rs.staffs.Count(), total_page = rs.totalPage, total_staffs = rs.totalStaffs });
         }
 
         [HttpGet("{id}")]
@@ -100,6 +99,22 @@ namespace Clinic_Web_Api.Controllers.Admin
             }
             return BadRequest(new { login = false });
 
+        }
+
+        [HttpGet("exist")]
+        public IActionResult CheckStaffExist(string username)
+        {
+            var staff = _staffService.IsStaffExist(username);
+            if (staff != null) return Ok(new { exist = true, username = staff.Username, email = staff.Email });
+            else return Ok(new { exist = false });
+
+        }
+
+        [HttpGet("positions")]
+        public IActionResult GetAllPositions()
+        {
+            var rs = _staffService.FindAllPosition().Select(p => new { id = p.Id, name = p.Name, salary = p.Salary, allowance = p.Allowance });
+            return Ok(new { positions = rs });
         }
     }
 }

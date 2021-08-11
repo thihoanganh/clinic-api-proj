@@ -29,7 +29,6 @@ namespace Clinic_Web_Api.Services
                 if (staff != null)
                 {
                     staff.Status = true;
-
                     staff.Position = _db.Positions.Where(p => p.Id == staff.PositionId).First();
                     staff.Password = BCrypt.Net.BCrypt.HashPassword(staff.Password);
                     _db.Staff.Add(staff);
@@ -44,6 +43,12 @@ namespace Clinic_Web_Api.Services
 
                 return -1;
             }
+        }
+
+        public Staff IsStaffExist(string username)
+        {
+            var staff = _db.Staff.Where(s => s.Username == username).FirstOrDefault();
+            return staff == null ? null : staff;
         }
 
         /// <summary>
@@ -103,9 +108,20 @@ namespace Clinic_Web_Api.Services
             }
         }
 
-        public List<Staff> FindAll()
+        public (List<Staff> staffs, int totalPage, int totalStaffs) FindAll(int page)
         {
-            return _db.Staff.Include(s => s.Position).Include(s => s.Role).AsNoTracking().ToList();
+            try
+            {
+                var Size = 5;
+                var TotalStaffs = _db.Staff.Count();
+                var TotalPage = (int)Math.Ceiling(((double)TotalStaffs / Size));
+                return (_db.Staff.Include(s => s.Position).Include(s => s.Role).OrderByDescending(a => a.Id).Skip((page - 1) * Size).Take(Size).ToList(), TotalPage, TotalStaffs);
+            }
+            catch (Exception)
+            {
+                return (null, -1, -1);
+                throw;
+            }
         }
 
         /// <summary>
@@ -157,6 +173,11 @@ namespace Clinic_Web_Api.Services
                 return null;
                 throw;
             }
+        }
+
+        public List<Position> FindAllPosition()
+        {
+            return _db.Positions.ToList();
         }
     }
 }
