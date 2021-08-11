@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 #nullable disable
@@ -26,6 +25,5 @@ namespace Clinic_Web_Api.Models
         public virtual ICollection<DetailOrder> DetailOrders { get; set; }
         public virtual ICollection<LectureComment> LectureComments { get; set; }
         public virtual ICollection<UserQuiz> UserQuizzes { get; set; }
-
     }
 }

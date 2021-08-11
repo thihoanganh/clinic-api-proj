@@ -75,7 +75,7 @@ namespace Clinic_Web_Api.Services
 
         public List<Seminar> Find(string term)
         {
-            var smn = _db.Seminars.Where(s => s.Title.Contains(term)).Include(s => s.SeminarEmail).ToList();
+            var smn = _db.Seminars.Where(s => s.Title.Contains(term)).Include(s => s.SeminarEmails).ToList();
             if (smn != null) return smn;
             return null;
         }

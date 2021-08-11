@@ -9,12 +9,12 @@ namespace Clinic_Web_Api.Models
     {
         public Role()
         {
-            Staffs = new HashSet<Staff>();
+            staff = new HashSet<Staff>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<Staff> Staffs { get; set; }
+        public virtual ICollection<Staff> staff { get; set; }
     }
 }

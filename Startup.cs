@@ -50,6 +50,7 @@ namespace Clinic_Web_Api
             services.AddScoped<IReceiptScientificEquipmentService, ReceiptScientificEquipmentServiceImplement>();
             services.AddScoped<IPriceService, PriceMedicineServiceImplement>();
             services.AddScoped<IPriceService, PriceScientificEquipServiceImplement>();
+            services.AddScoped<IMedicineService, MedicineServiceImplement>();
 
 
 

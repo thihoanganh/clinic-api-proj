@@ -275,12 +275,12 @@ namespace Clinic_Web_Api.Services
 
         public double GetLectureQuizPercent(int lecId, int userId)
         {
-            var quizzesOfLecture = _db.Quizzes.Where(q => q.LectureId == lecId).Include(q => q.UserQuiz).ToList();
+            var quizzesOfLecture = _db.Quizzes.Where(q => q.LectureId == lecId).Include(q => q.UserQuizzes).ToList();
             var count = 0;
             double percent = 0;
             quizzesOfLecture.ForEach(q =>
             {
-                var userQuiz = q.UserQuiz.Where(uq => uq.UserId == userId).FirstOrDefault();
+                var userQuiz = q.UserQuizzes.Where(uq => uq.UserId == userId).FirstOrDefault();
                 if (userQuiz != null)
                 {
                     percent += userQuiz.Percent;
@@ -353,7 +353,7 @@ namespace Clinic_Web_Api.Services
 
         private bool CheckAnswer(int answerId)
         {
-            return _db.Answers.Find(answerId).IsCorrect;
+            return (bool)_db.Answers.Find(answerId).IsCorrect;
         }
 
 

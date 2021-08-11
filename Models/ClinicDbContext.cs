@@ -10,7 +10,6 @@ namespace Clinic_Web_Api.Models
     {
         public ClinicDbContext()
         {
-
         }
 
         public ClinicDbContext(DbContextOptions<ClinicDbContext> options)
@@ -33,6 +32,8 @@ namespace Clinic_Web_Api.Models
         public virtual DbSet<Origin> Origins { get; set; }
         public virtual DbSet<Position> Positions { get; set; }
         public virtual DbSet<Price> Prices { get; set; }
+        public virtual DbSet<PriceMedicine> PriceMedicines { get; set; }
+        public virtual DbSet<PriceScientificEquipment> PriceScientificEquipments { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<Quiz> Quizzes { get; set; }
         public virtual DbSet<ReceiptMedicine> ReceiptMedicines { get; set; }
@@ -40,10 +41,8 @@ namespace Clinic_Web_Api.Models
         public virtual DbSet<ReceiptScientificEquipment> ReceiptScientificEquipments { get; set; }
         public virtual DbSet<ReceiptScientificEquipmentIdOrderDetail> ReceiptScientificEquipmentIdOrderDetails { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
-        public virtual DbSet<PriceScientificEquipment> PriceScientificEquipments { get; set; }
         public virtual DbSet<ScientificEquipment> ScientificEquipments { get; set; }
         public virtual DbSet<Seminar> Seminars { get; set; }
-        public virtual DbSet<PriceMedicine> PriceMedicines { get; set; }
         public virtual DbSet<SeminarEmail> SeminarEmails { get; set; }
         public virtual DbSet<SeminarRegistation> SeminarRegistations { get; set; }
         public virtual DbSet<TypeOfMedicine> TypeOfMedicines { get; set; }
@@ -55,7 +54,8 @@ namespace Clinic_Web_Api.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlServer("Data Source=DESKTOP-ID9RBP3\\MSSQLSERVER01;Initial Catalog=demo17;Integrated Security=true");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=.;Database=Clinic1;user id=sa;password=123123");
             }
         }
 
@@ -67,9 +67,11 @@ namespace Clinic_Web_Api.Models
             {
                 entity.ToTable("Answer");
 
-                entity.Property(e => e.Content)
-                    .HasMaxLength(300)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Content).HasMaxLength(300);
+
+                entity.Property(e => e.IsCorrect)
+                    .IsRequired()
+                    .HasDefaultValueSql("(CONVERT([bit],(0)))");
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.Answers)
@@ -77,41 +79,13 @@ namespace Clinic_Web_Api.Models
                     .HasConstraintName("FK_Answer_Question");
             });
 
-            modelBuilder.Entity<PriceMedicine>(entity =>
-            {
-                entity.ToTable("PriceMedicine");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Date).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Medicine)
-                    .WithMany(p => p.PriceMedicines)
-                    .HasForeignKey(d => d.MedicineId)
-                    .HasConstraintName("FK_PriceMedicine_Medicine");
-            });
-
-            modelBuilder.Entity<PriceScientificEquipment>(entity =>
-            {
-                entity.ToTable("PriceScientificEquipment");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Date).HasColumnType("datetime");
-
-                entity.HasOne(d => d.ScientificEquipment)
-                    .WithMany(p => p.PriceScientificEquipments)
-                    .HasForeignKey(d => d.ScientificEquipmentId)
-                    .HasConstraintName("FK_PriceScientificEquipment_ScientificEquipment");
-            });
-
             modelBuilder.Entity<Attachment>(entity =>
             {
                 entity.ToTable("Attachment");
 
-                entity.Property(e => e.Name)
-                    .HasMaxLength(500)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Name).HasMaxLength(500);
+
+                entity.Property(e => e.OriginName).HasMaxLength(500);
 
                 entity.HasOne(d => d.Lecture)
                     .WithMany(p => p.Attachments)
@@ -129,8 +103,6 @@ namespace Clinic_Web_Api.Models
                     .HasColumnName("Brand");
             });
 
-
-
             modelBuilder.Entity<DetailOrder>(entity =>
             {
                 entity.ToTable("DetailOrder");
@@ -143,6 +115,10 @@ namespace Clinic_Web_Api.Models
                     .WithMany(p => p.DetailOrders)
                     .HasForeignKey(d => d.CustomerId)
                     .HasConstraintName("FK_DetailOrder_Customer");
+
+                entity.HasOne(d => d.DiscountEvent)
+                    .WithMany(p => p.DetailOrders)
+                    .HasForeignKey(d => d.DiscountEventId);
             });
 
             modelBuilder.Entity<DiscountEvent>(entity =>
@@ -160,11 +136,7 @@ namespace Clinic_Web_Api.Models
             {
                 entity.ToTable("Feedback");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.Content)
-                    .HasMaxLength(1000)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Content).HasMaxLength(1000);
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
@@ -172,7 +144,6 @@ namespace Clinic_Web_Api.Models
                     .WithMany(p => p.Feedbacks)
                     .HasForeignKey(d => d.SeminarId)
                     .HasConstraintName("FK_Feedback_Seminar");
-                entity.HasKey(e => e.Id);
             });
 
             modelBuilder.Entity<Lecture>(entity =>
@@ -181,23 +152,15 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
-                entity.Property(e => e.CreatedBy)
-                    .HasMaxLength(200)
-                    .IsFixedLength(false);
+                entity.Property(e => e.CreatedBy).HasMaxLength(200);
 
-                entity.Property(e => e.ModifyBy)
-                    .HasMaxLength(200)
-                    .IsFixedLength(false);
+                entity.Property(e => e.ModifyBy).HasMaxLength(200);
 
                 entity.Property(e => e.ModifyDate).HasColumnType("datetime");
 
-                entity.Property(e => e.Name)
-                    .HasMaxLength(500)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Name).HasMaxLength(500);
 
-                entity.Property(e => e.Sumary)
-                    .HasMaxLength(1000)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Sumary).HasMaxLength(1000);
 
                 entity.HasOne(d => d.Cate)
                     .WithMany(p => p.Lectures)
@@ -209,18 +172,14 @@ namespace Clinic_Web_Api.Models
             {
                 entity.ToTable("LectureCategory");
 
-                entity.Property(e => e.Name)
-                    .HasMaxLength(300)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Name).HasMaxLength(300);
             });
 
             modelBuilder.Entity<LectureComment>(entity =>
             {
                 entity.ToTable("LectureComment");
 
-                entity.Property(e => e.Content)
-                    .HasMaxLength(500)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Content).HasMaxLength(500);
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
@@ -239,18 +198,14 @@ namespace Clinic_Web_Api.Models
             {
                 entity.ToTable("Level");
 
-                entity.Property(e => e.Name)
-                    .HasMaxLength(100)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Name).HasMaxLength(100);
             });
 
             modelBuilder.Entity<MachineCategory>(entity =>
             {
                 entity.ToTable("MachineCategory");
 
-                entity.Property(e => e.Name)
-                    .HasMaxLength(200)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Name).HasMaxLength(200);
             });
 
             modelBuilder.Entity<Medicine>(entity =>
@@ -294,6 +249,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.HasOne(d => d.Price)
                     .WithMany(p => p.Medicines)
+                    .HasForeignKey(d => d.PriceId)
                     .HasConstraintName("FK_Medicine_Price");
 
                 entity.HasOne(d => d.TypeOf)
@@ -316,9 +272,7 @@ namespace Clinic_Web_Api.Models
             {
                 entity.ToTable("Position");
 
-                entity.Property(e => e.Name)
-                    .HasMaxLength(300)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Name).HasMaxLength(300);
             });
 
             modelBuilder.Entity<Price>(entity =>
@@ -330,13 +284,39 @@ namespace Clinic_Web_Api.Models
                 entity.Property(e => e.Price1).HasColumnName("Price");
             });
 
+            modelBuilder.Entity<PriceMedicine>(entity =>
+            {
+                entity.ToTable("PriceMedicine");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Medicine)
+                    .WithMany(p => p.PriceMedicines)
+                    .HasForeignKey(d => d.MedicineId)
+                    .HasConstraintName("FK_PriceMedicine_Medicine");
+            });
+
+            modelBuilder.Entity<PriceScientificEquipment>(entity =>
+            {
+                entity.ToTable("PriceScientificEquipment");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.HasOne(d => d.ScientificEquipment)
+                    .WithMany(p => p.PriceScientificEquipments)
+                    .HasForeignKey(d => d.ScientificEquipmentId)
+                    .HasConstraintName("FK_PriceScientificEquipment_ScientificEquipment");
+            });
+
             modelBuilder.Entity<Question>(entity =>
             {
                 entity.ToTable("Question");
 
-                entity.Property(e => e.Name)
-                    .HasMaxLength(1000)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Name).HasMaxLength(1000);
 
                 entity.HasOne(d => d.Quiz)
                     .WithMany(p => p.Questions)
@@ -431,9 +411,7 @@ namespace Clinic_Web_Api.Models
             {
                 entity.ToTable("Role");
 
-                entity.Property(e => e.Name)
-                    .HasMaxLength(100)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Name).HasMaxLength(100);
             });
 
             modelBuilder.Entity<ScientificEquipment>(entity =>
@@ -478,78 +456,50 @@ namespace Clinic_Web_Api.Models
             {
                 entity.ToTable("Seminar");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.Contact)
-                    .HasMaxLength(300)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Contact).HasMaxLength(300);
 
                 entity.Property(e => e.EndAt).HasColumnType("datetime");
 
-                entity.Property(e => e.Method)
-                    .HasMaxLength(100)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Method).HasMaxLength(100);
 
-                entity.Property(e => e.Place)
-                    .HasMaxLength(300)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Place).HasMaxLength(300);
 
-                entity.Property(e => e.Poster)
-                    .HasMaxLength(300)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Poster).HasMaxLength(300);
 
-                entity.Property(e => e.Speaker)
-                    .HasMaxLength(100)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Speaker).HasMaxLength(100);
 
                 entity.Property(e => e.StartAt).HasColumnType("datetime");
 
-                entity.Property(e => e.Title)
-                    .HasMaxLength(500)
-                    .IsFixedLength(false);
-
-                entity.HasOne(d => d.SeminarEmail)
-                    .WithOne(p => p.Seminar)
-                    .HasPrincipalKey<SeminarEmail>(p => p.SeminarId)
-                    .HasForeignKey<Seminar>(d => d.Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Seminar_SeminarEmail1");
+                entity.Property(e => e.Title).HasMaxLength(500);
             });
 
             modelBuilder.Entity<SeminarEmail>(entity =>
             {
                 entity.ToTable("SeminarEmail");
 
-                entity.HasIndex(e => e.SeminarId, "IX_SeminarEmail")
-                    .IsUnique();
+                entity.Property(e => e.Title).HasMaxLength(300);
 
-                entity.Property(e => e.Title)
-                    .HasMaxLength(300)
-                    .IsFixedLength(false);
+                entity.HasOne(d => d.Seminar)
+                    .WithMany(p => p.SeminarEmails)
+                    .HasForeignKey(d => d.SeminarId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SeminarEmail_Seminar");
             });
 
             modelBuilder.Entity<SeminarRegistation>(entity =>
             {
                 entity.ToTable("SeminarRegistation");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.Email)
-                    .HasMaxLength(100)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Email).HasMaxLength(100);
 
                 entity.Property(e => e.Fname)
                     .HasMaxLength(300)
-                    .HasColumnName("FName")
-                    .IsFixedLength(false);
+                    .HasColumnName("FName");
 
                 entity.HasOne(d => d.Seminar)
                     .WithMany(p => p.SeminarRegistations)
                     .HasForeignKey(d => d.SeminarId)
                     .HasConstraintName("FK_SeminarRegistation_Seminar");
-
-
-
             });
 
             modelBuilder.Entity<TypeOfMedicine>(entity =>
@@ -573,9 +523,7 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.FullName).HasMaxLength(300);
 
-                entity.Property(e => e.Password)
-                    .HasMaxLength(500)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Password).HasMaxLength(500);
 
                 entity.Property(e => e.Username).HasMaxLength(300);
             });
@@ -587,7 +535,7 @@ namespace Clinic_Web_Api.Models
                 entity.ToTable("UserQuiz");
 
                 entity.HasOne(d => d.Quiz)
-                    .WithMany(p => p.UserQuiz)
+                    .WithMany(p => p.UserQuizzes)
                     .HasForeignKey(d => d.QuizId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserQuiz_Quiz");
@@ -605,32 +553,24 @@ namespace Clinic_Web_Api.Models
 
                 entity.Property(e => e.Dob).HasColumnType("datetime");
 
-                entity.Property(e => e.Email)
-                    .HasMaxLength(100)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Email).HasMaxLength(100);
 
                 entity.Property(e => e.Name).HasMaxLength(300);
 
-                entity.Property(e => e.Password)
-                    .HasMaxLength(500)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Password).HasMaxLength(500);
 
-                entity.Property(e => e.Username)
-                    .HasMaxLength(100)
-                    .IsFixedLength(false);
+                entity.Property(e => e.Username).HasMaxLength(100);
 
                 entity.Property(e => e.WokingStart).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Position)
-                    .WithMany(p => p.Staffs)
+                    .WithMany(p => p.staff)
                     .HasForeignKey(d => d.PositionId)
                     .HasConstraintName("FK_Staff_Position");
 
-                entity.HasOne(s => s.Role)
-                    .WithMany(s => s.Staffs)
-                    .HasForeignKey(s => s.RoleId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.staff)
+                    .HasForeignKey(d => d.RoleId);
             });
 
             OnModelCreatingPartial(modelBuilder);

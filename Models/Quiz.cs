@@ -10,7 +10,7 @@ namespace Clinic_Web_Api.Models
         public Quiz()
         {
             Questions = new HashSet<Question>();
-            UserQuiz = new HashSet<UserQuiz>();
+            UserQuizzes = new HashSet<UserQuiz>();
         }
 
         public int Id { get; set; }
@@ -22,6 +22,6 @@ namespace Clinic_Web_Api.Models
         public virtual Lecture Lecture { get; set; }
         public virtual Level Level { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
-        public virtual ICollection<UserQuiz> UserQuiz { get; set; }
+        public virtual ICollection<UserQuiz> UserQuizzes { get; set; }
     }
 }

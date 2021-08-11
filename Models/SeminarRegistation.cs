@@ -15,6 +15,5 @@ namespace Clinic_Web_Api.Models
         public int SeminarId { get; set; }
 
         public virtual Seminar Seminar { get; set; }
-
     }
 }

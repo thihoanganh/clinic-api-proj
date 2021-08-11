@@ -9,6 +9,7 @@ namespace Clinic_Web_Api.Models
     {
         public ScientificEquipment()
         {
+            PriceScientificEquipments = new HashSet<PriceScientificEquipment>();
             ReceiptScientificEquipments = new HashSet<ReceiptScientificEquipment>();
         }
 
@@ -28,7 +29,7 @@ namespace Clinic_Web_Api.Models
         public virtual MachineCategory MachineCategory { get; set; }
         public virtual Origin Origin { get; set; }
         public virtual Price Price { get; set; }
-        public virtual ICollection<ReceiptScientificEquipment> ReceiptScientificEquipments { get; set; }
         public virtual ICollection<PriceScientificEquipment> PriceScientificEquipments { get; set; }
+        public virtual ICollection<ReceiptScientificEquipment> ReceiptScientificEquipments { get; set; }
     }
 }

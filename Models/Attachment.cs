@@ -9,10 +9,10 @@ namespace Clinic_Web_Api.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int? LectureId { get; set; }
         public string OriginName { get; set; }
         public string Size { get; set; }
         public string Type { get; set; }
-        public int? LectureId { get; set; }
 
         public virtual Lecture Lecture { get; set; }
     }

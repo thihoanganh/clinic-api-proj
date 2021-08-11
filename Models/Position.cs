@@ -9,7 +9,7 @@ namespace Clinic_Web_Api.Models
     {
         public Position()
         {
-            Staffs = new HashSet<Staff>();
+            staff = new HashSet<Staff>();
         }
 
         public int Id { get; set; }
@@ -17,6 +17,6 @@ namespace Clinic_Web_Api.Models
         public long? Salary { get; set; }
         public long? Allowance { get; set; }
 
-        public virtual ICollection<Staff> Staffs { get; set; }
+        public virtual ICollection<Staff> staff { get; set; }
     }
 }
