@@ -214,6 +214,9 @@ namespace Clinic_Web_Api.Models
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.DateOfManufacture).HasColumnType("datetime");
+                entity.Property(e => e.Quantity).HasColumnType("int");
+                entity.Property(e => e.PriceId).HasColumnType("int");
+
 
                 entity.Property(e => e.Illustration)
                     .HasMaxLength(250)

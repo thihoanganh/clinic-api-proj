@@ -28,7 +28,7 @@ namespace Clinic_Web_Api.Models
         public int? TypeOfId { get; set; }
         public int? BrandId { get; set; }
         public int? PriceId { get; set; }
-
+        public DateTime Expiry { get; set; }
         public virtual Brand Brand { get; set; }
         public virtual Origin Origin { get; set; }
         public virtual Price Price { get; set; }
