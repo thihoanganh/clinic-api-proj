@@ -54,8 +54,6 @@ namespace Clinic_Web_Api.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=.;Database=Clinic1;user id=sa;password=123123");
             }
         }
 
@@ -108,8 +106,9 @@ namespace Clinic_Web_Api.Models
                 entity.ToTable("DetailOrder");
 
                 entity.Property(e => e.Id).HasColumnName("id");
-
                 entity.Property(e => e.Date).HasColumnType("datetime");
+                entity.Property(e => e.IsExport).HasColumnType("bit");
+                entity.Property(e => e.IsPayment).HasColumnType("bit");
 
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.DetailOrders)
@@ -212,7 +211,7 @@ namespace Clinic_Web_Api.Models
             {
                 entity.ToTable("Medicine");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.DateOfManufacture).HasColumnType("datetime");
 
@@ -504,7 +503,7 @@ namespace Clinic_Web_Api.Models
             {
                 entity.ToTable("TypeOfMedicine");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Category)
                     .HasMaxLength(250)
