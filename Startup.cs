@@ -52,7 +52,9 @@ namespace Clinic_Web_Api
             services.AddScoped<IPriceService, PriceScientificEquipServiceImplement>();
             services.AddScoped<IMedicineService, MedicineServiceImplement>();
 
-
+            //hpc
+            services.AddScoped<MedicineServicelmlp, MedicineService>();
+            services.AddScoped<ScientificServicelmlp, ScientificService>();
 
 
 
