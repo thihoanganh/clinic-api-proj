@@ -1,6 +1,7 @@
 ﻿using Clinic_Web_Api.Entities;
 using Clinic_Web_Api.Models;
 using Clinic_Web_Api.Services.Interface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,9 @@ namespace Clinic_Web_Api.Services
         {
             db = _db;
         }
-        public List<MedicineModel> getAll()
+
+
+		public List<MedicineModel> getAll()
         {
             return db.Medicines.Select(m => new MedicineModel
             {

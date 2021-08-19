@@ -54,12 +54,18 @@ namespace Clinic_Web_Api
             services.AddScoped<IMedicineService, MedicineServiceImplement>();
             services.AddScoped<IScientificEquipmentService, ScientificEquipmentServiceImplement>();
 
+<<<<<<< HEAD
+            //hpc
+            services.AddScoped<MedicineServicelmlp, MedicineService>();
+            services.AddScoped<ScientificServicelmlp, ScientificService>();
+=======
             // max capacity when upload file
             services.Configure<FormOptions>(options =>
             {
                 options.MemoryBufferThreshold = Int32.MaxValue;
                 options.MultipartBodyLengthLimit = 200000000;
             });
+>>>>>>> 7d2d5117c960f96da3b1014bd0f0bd9ead4ae58d
 
 
 

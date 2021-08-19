@@ -1,5 +1,6 @@
 ﻿
 using Clinic_Web_Api.Entities;
+using Clinic_Web_Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace Clinic_Web_Api.Services.Interface
     {
         public List<MedicineModel> getAll();
         public List<MedicineModel> searchByName(string name);
+     
     }
 }
