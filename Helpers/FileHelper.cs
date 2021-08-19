@@ -62,7 +62,7 @@ namespace Clinic_Web_Api.Helpers
                 {
                     targetFile.CopyTo(fileStream);
                 }
-                return new Attachment() { Type = targetFile.ContentType, Name = FileNameGuid, OriginName = targetFile.Name, Size = GetSize(Convert.ToDecimal(targetFile.Length)) };
+                return new Attachment() { Type = targetFile.ContentType, Name = FileNameGuid, OriginName = targetFile.FileName, Size = GetSize(Convert.ToDecimal(targetFile.Length)) };
             }
             catch (Exception)
             {

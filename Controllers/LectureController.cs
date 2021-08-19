@@ -44,7 +44,15 @@ namespace Clinic_Web_Api.Controllers
         public IActionResult FindAllCategory()
         {
             var rs = _lecService.FindAllCate();
-            return Ok(new { categories = rs });
+            return Ok(new
+            {
+                categories = rs.Select(l => new
+                {
+                    id = l.Id,
+                    name = l.Name,
+                    total_lectures = l.Lectures.Count()
+                })
+            });
         }
         [HttpDelete("category/{id}")]
         public IActionResult CateDelete(int id)
@@ -66,7 +74,7 @@ namespace Clinic_Web_Api.Controllers
 
                 // upload attachment to server
                 var fileHelper = new FileHelper(_evn);
-                var validate = fileHelper.FileValidate((long)Math.Pow(1024, 3), new string[] { ".jpg", ".png", ".docx", ".xlsx", ".mp3", ".mp4" }, attach);
+                var validate = fileHelper.FileValidate((long)Math.Pow(1024, 3), new string[] { ".jpg", ".txt", ".png", ".docx", ".xlsx", ".mp3", ".mp4" }, attach);
                 if (validate)
                 {
                     var atm = fileHelper.UploadFile(attach, "lecture/attach");
@@ -128,7 +136,7 @@ namespace Clinic_Web_Api.Controllers
             {
                 var fileHelper = new FileHelper(_evn);
                 var zipStream = fileHelper.Zip(atms);
-                return File(zipStream, "application/octet-stream", "lecture.zip");
+                return File(zipStream, "application/octet-stream", "lecture_" + id.ToString() + ".zip");
             }
             return NotFound(new { result = "error", msg = "no attachments was found" });
         }
@@ -136,8 +144,8 @@ namespace Clinic_Web_Api.Controllers
         [HttpGet("{id}/attachs")]
         public IActionResult GetAttachs(int id)
         {
-            var atms = _lecService.GetAttachments(id).Select(atm => new { id = atm.Id, name = atm.Name, type = atm.Type, size = atm.Size });
-            return Ok(new { result = atms, count = atms.Count() });
+            var atms = _lecService.GetAttachments(id);
+            return Ok(new { result = atms.Select(atm => new { id = atm.Id, name = atm.Name, original_name = atm.OriginName, type = atm.Type, size = atm.Size }), count = atms.Count() });
         }
 
         [HttpPost]
@@ -180,10 +188,21 @@ namespace Clinic_Web_Api.Controllers
         }
 
         [HttpGet("all")]
-        public IActionResult FindAllLecture()
+        public IActionResult FindAllLecture(int page)
         {
+            if (page == -1)
+            {
+                return BadRequest();
+            }
+            var rs = _lecService.FindAllLecture(page);
+            return Ok(new { result = rs.lecs, totalPage = rs.totalPage, totalLectures = rs.totalLec });
+        }
 
-            return Ok(new { result = _lecService.FindAllLecture() });
+        [HttpGet("search")]
+        public IActionResult LectureSearch(string term)
+        {
+            var rs = _lecService.SearchLecture(term);
+            return Ok(new { result = rs.Select(l => new { id = l.Id, name = l.Name }), total_result = rs.Count() });
         }
 
         [HttpGet]
@@ -197,13 +216,22 @@ namespace Clinic_Web_Api.Controllers
             return BadRequest(new { result = "error", msg = "object not found" });
 
         }
+        [HttpGet("quiz/{id}")]
+        public IActionResult GetQuizById(int id)
+        {
+            if (id == 0) return BadRequest();
+            else
+            {
+                return Ok(_lecService.FindQuiz(id));
 
+            }
+        }
         [HttpPost("quiz")]
         public IActionResult CreateQuiz([FromBody] Quiz qz)
         {
             var answerValidate = true;
             qz.Questions.ToList().ForEach(q => { if (q.Answers.Count < 2) answerValidate = false; });
-            if (qz == null || qz.Questions.Count < 5 || !answerValidate) return BadRequest(new { result = "error", msg = "a quiz must be more than 5 questions with up to 2 answers " }); // require a quiz must be more than 5 questions // each with up to 2 answer
+            if (qz == null || qz.Questions.Count < 2 || !answerValidate) return BadRequest(new { result = "error", msg = "a quiz must be more than 5 questions with up to 2 answers " }); // require a quiz must be more than 5 questions // each with up to 2 answer
             else
             {
                 _lecService.CreateQuiz(qz);
@@ -212,6 +240,24 @@ namespace Clinic_Web_Api.Controllers
             }
 
         }
+        [HttpPut("quiz")]
+        public IActionResult UpdateQuiz([FromBody] Quiz quiz)
+        {
+            var rs = _lecService.UpdateQuiz(quiz);
+            if (rs) return Ok(new { result = "success", msg = "Update successfully" });
+            else return NotFound(new { result = "error", msg = "Object not found" });
+        }
+        [HttpDelete("quiz/{id}")]
+        public IActionResult DeleteQuiz(int id)
+        {
+            var delId = _lecService.DeleteQuiz(id);
+            if (delId == -1) return BadRequest();
+            else
+            {
+                return Ok(new { status = "success", delId = delId });
+            }
+        }
+
         [HttpGet("{id}/quizzes")]
         public IActionResult FindAllLectureQuizzes(int id)
         {
@@ -225,6 +271,7 @@ namespace Clinic_Web_Api.Controllers
 
 
         [HttpPost("quiz/submit")]
+
         public IActionResult CreateUserQuiz([FromBody] UserQuizInput uq)
         {
             if (uq.UserId != 0 && uq.QuizId != 0 && uq.Answers.Length > 0)
@@ -262,6 +309,30 @@ namespace Clinic_Web_Api.Controllers
             var rs = _lecService.GetRandomQuiz(lecid, userid);
             if (rs == null) return Ok(new { status = false, msg = "There no quiz for this user in this lecture. Try another one !" });
             return Ok(new { status = true, result = rs, total_question = rs.Questions.Count });
+        }
+
+        [HttpGet("quizzes")]
+        public IActionResult GetAllQuizzes(int page)
+        {
+            var rs = _lecService.FindAllQuizzes(page);
+            if (rs.quizzes == null) return Ok(new { status = false, msg = "Some trouble was occurs. Try again !" });
+            else
+            {
+                return Ok(new
+                {
+                    status = true,
+                    result = rs.quizzes.Select(s => new
+                    {
+                        id = s.Id,
+                        duration = s.Duration,
+                        level_id = s.LevelId,
+                        level_name = s.Level.Name,
+                        total_question = s.TotalQuestion
+                    }),
+                    total_quiz = rs.totalQuiz,
+                    total_page = rs.totalPage
+                });
+            }
         }
 
         [HttpPost("comment")]

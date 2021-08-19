@@ -32,6 +32,7 @@ namespace Clinic_Web_Api.Helpers
                 // username & role
                 var staff = obj as Staff;
                 claims.Add(new Claim("Username", staff.Username));
+                claims.Add(new Claim("Id", staff.Id.ToString()));
                 claims.Add(new Claim("IsAdmin", staff.Role.Name == "Admin" ? "true" : "false", "bool"));
                 claims.Add(new Claim(ClaimTypes.Role, staff.Role.Name));
             }
@@ -41,6 +42,7 @@ namespace Clinic_Web_Api.Helpers
                 // just claims with username of user
                 var user = obj as User;
                 claims.Add(new Claim("Username", user.Username));
+                claims.Add(new Claim("UserId", user.Id.ToString()));
             }
 
 
@@ -48,7 +50,7 @@ namespace Clinic_Web_Api.Helpers
                     issuer: Configuration["Jwt:Issuer"],
                     audience: Configuration["Jwt:Issuer"],
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(5),
+                    expires: DateTime.Now.AddMinutes(10),
                     signingCredentials: credential
                 );
 

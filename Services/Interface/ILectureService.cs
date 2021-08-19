@@ -20,9 +20,12 @@ namespace Clinic_Web_Api.Services.Interface
         int DeleteLecture(int id);
         Lecture UpdateLecture(Lecture lecture);
         dynamic FindLecture(int lecId);
-        dynamic FindAllLecture();
+        (List<Quiz> quizzes, int totalPage, int totalQuiz) FindAllQuizzes(int page);
+        (dynamic lecs, int totalPage, int totalLec) FindAllLecture(int page);
         List<Lecture> FindByCate(int cateId);
+
         Quiz CreateQuiz(Quiz qz);
+        int DeleteQuiz(int id);
         dynamic GetLectureQuizzes(int lecId);
         UserQuiz CreateUserQuiz(int quizId, int userId, int[] userAnswers);
         double GetLectureQuizPercent(int lecId, int userId);
@@ -30,9 +33,10 @@ namespace Clinic_Web_Api.Services.Interface
         int DeleteComment(int cmtId);
         dynamic GetLectureComments(int lecId);
         Quiz GetRandomQuiz(int lecId, int userId);
+        List<Lecture> SearchLecture(string term);
 
-
-
+        bool UpdateQuiz(Quiz quiz);
+        dynamic FindQuiz(int id);
 
     }
 }
