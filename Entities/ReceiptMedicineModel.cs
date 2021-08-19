@@ -12,7 +12,7 @@ namespace Clinic_Web_Api.Entities
         public double PriceBuy { get; set; }
         public DateTime Date { get; set; }
         public String NameOfMedicine { get; set; }
-
+        public DateTime ExpiryDate { get; set; }
         public int MedicineId { get; set; }
     }
 }

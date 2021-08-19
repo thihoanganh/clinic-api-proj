@@ -948,7 +948,8 @@ namespace Clinic_Web_Api.Migrations
                     b.HasOne("Clinic_Web_Api.Models.Question", "Question")
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId")
-                        .HasConstraintName("FK_Answer_Question");
+                        .HasConstraintName("FK_Answer_Question")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Question");
                 });
@@ -958,7 +959,8 @@ namespace Clinic_Web_Api.Migrations
                     b.HasOne("Clinic_Web_Api.Models.Lecture", "Lecture")
                         .WithMany("Attachments")
                         .HasForeignKey("LectureId")
-                        .HasConstraintName("FK_Attachment_Lecture");
+                        .HasConstraintName("FK_Attachment_Lecture")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Lecture");
                 });
@@ -996,7 +998,8 @@ namespace Clinic_Web_Api.Migrations
                     b.HasOne("Clinic_Web_Api.Models.LectureCategory", "Cate")
                         .WithMany("Lectures")
                         .HasForeignKey("CateId")
-                        .HasConstraintName("FK_Lecture_LectureCategory");
+                        .HasConstraintName("FK_Lecture_LectureCategory")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Cate");
                 });
@@ -1006,12 +1009,14 @@ namespace Clinic_Web_Api.Migrations
                     b.HasOne("Clinic_Web_Api.Models.Lecture", "Lecture")
                         .WithMany("LectureComments")
                         .HasForeignKey("LectureId")
-                        .HasConstraintName("FK_LectureComment_Lecture");
+                        .HasConstraintName("FK_LectureComment_Lecture")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Clinic_Web_Api.Models.User", "User")
                         .WithMany("LectureComments")
                         .HasForeignKey("UserId")
-                        .HasConstraintName("FK_LectureComment_User");
+                        .HasConstraintName("FK_LectureComment_User")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Lecture");
 
@@ -1074,7 +1079,8 @@ namespace Clinic_Web_Api.Migrations
                     b.HasOne("Clinic_Web_Api.Models.Quiz", "Quiz")
                         .WithMany("Questions")
                         .HasForeignKey("QuizId")
-                        .HasConstraintName("FK_Question_Quiz");
+                        .HasConstraintName("FK_Question_Quiz")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Quiz");
                 });
@@ -1084,7 +1090,8 @@ namespace Clinic_Web_Api.Migrations
                     b.HasOne("Clinic_Web_Api.Models.Lecture", "Lecture")
                         .WithMany("Quizzes")
                         .HasForeignKey("LectureId")
-                        .HasConstraintName("FK_Quiz_Lecture");
+                        .HasConstraintName("FK_Quiz_Lecture")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Clinic_Web_Api.Models.Level", "Level")
                         .WithMany("Quizzes")
@@ -1233,12 +1240,14 @@ namespace Clinic_Web_Api.Migrations
                         .WithMany("UserQuiz")
                         .HasForeignKey("QuizId")
                         .HasConstraintName("FK_UserQuiz_Quiz")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Clinic_Web_Api.Models.User", "User")
                         .WithMany("UserQuizzes")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_UserQuiz_User")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Quiz");

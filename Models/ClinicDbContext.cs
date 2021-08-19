@@ -75,7 +75,7 @@ namespace Clinic_Web_Api.Models
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.Answers)
                     .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("FK_Answer_Question");
+                    .HasConstraintName("FK_Answer_Question").OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Attachment>(entity =>
@@ -89,7 +89,7 @@ namespace Clinic_Web_Api.Models
                 entity.HasOne(d => d.Lecture)
                     .WithMany(p => p.Attachments)
                     .HasForeignKey(d => d.LectureId)
-                    .HasConstraintName("FK_Attachment_Lecture");
+                    .HasConstraintName("FK_Attachment_Lecture").OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Brand>(entity =>
@@ -164,7 +164,7 @@ namespace Clinic_Web_Api.Models
                 entity.HasOne(d => d.Cate)
                     .WithMany(p => p.Lectures)
                     .HasForeignKey(d => d.CateId)
-                    .HasConstraintName("FK_Lecture_LectureCategory");
+                    .HasConstraintName("FK_Lecture_LectureCategory").OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<LectureCategory>(entity =>
@@ -185,12 +185,12 @@ namespace Clinic_Web_Api.Models
                 entity.HasOne(d => d.Lecture)
                     .WithMany(p => p.LectureComments)
                     .HasForeignKey(d => d.LectureId)
-                    .HasConstraintName("FK_LectureComment_Lecture");
+                    .HasConstraintName("FK_LectureComment_Lecture").OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.LectureComments)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_LectureComment_User");
+                    .HasConstraintName("FK_LectureComment_User").OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Level>(entity =>
@@ -214,8 +214,6 @@ namespace Clinic_Web_Api.Models
             
 
                 entity.Property(e => e.DateOfManufacture).HasColumnType("datetime");
-
-                entity.Property(e => e.Expiry).HasColumnType("datetime");
 
                 entity.Property(e => e.Illustration)
                     .HasMaxLength(250)
@@ -320,7 +318,7 @@ namespace Clinic_Web_Api.Models
                 entity.HasOne(d => d.Quiz)
                     .WithMany(p => p.Questions)
                     .HasForeignKey(d => d.QuizId)
-                    .HasConstraintName("FK_Question_Quiz");
+                    .HasConstraintName("FK_Question_Quiz").OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Quiz>(entity =>
@@ -330,7 +328,7 @@ namespace Clinic_Web_Api.Models
                 entity.HasOne(d => d.Lecture)
                     .WithMany(p => p.Quizzes)
                     .HasForeignKey(d => d.LectureId)
-                    .HasConstraintName("FK_Quiz_Lecture");
+                    .HasConstraintName("FK_Quiz_Lecture").OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.Level)
                     .WithMany(p => p.Quizzes)
@@ -537,13 +535,13 @@ namespace Clinic_Web_Api.Models
                     .WithMany(p => p.UserQuizzes)
                     .HasForeignKey(d => d.QuizId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UserQuiz_Quiz");
+                    .HasConstraintName("FK_UserQuiz_Quiz").OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserQuizzes)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UserQuiz_User");
+                    .HasConstraintName("FK_UserQuiz_User").OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Staff>(entity =>

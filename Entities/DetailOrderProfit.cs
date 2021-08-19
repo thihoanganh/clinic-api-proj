@@ -8,11 +8,11 @@ namespace Clinic_Web_Api.Entities
     public class DetailOrderProfit
     {
 
-        public DateTime Date;
-        public Double PriceBuy;
-        public Double PriceSell;
-        public int CustomerId;
-        public int DetailOrderId;
+        public DateTime Date { get; set; }
+        public Double PriceBuy { get; set; }
+        public Double PriceSell { get; set; }
+        public int CustomerId { get; set; }
+        public int DetailOrderId { get; set; }
 
     }
 }

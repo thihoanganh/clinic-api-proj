@@ -93,5 +93,35 @@ namespace Clinic_Web_Api.Controllers.Admin
                 return BadRequest();
             }
         }
+
+        [HttpPost("orderprofitofmedicine")]
+        [Produces("application/json")]
+        public IActionResult OrderProfitOfMedicine([FromBody]  ArgumentStatistical argumentStatistical)
+        {
+            try
+            {
+
+                return Ok(detailOrderService.getProfitOfMedicine(argumentStatistical.IdProduct,argumentStatistical.FromDate,argumentStatistical.ToDate));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("orderprofitofscientificequipment")]
+        [Produces("application/json")]
+        public IActionResult OrderProfitOfScientificEquipment([FromBody] ArgumentStatistical argumentStatistical)
+        {
+            try
+            {
+
+                return Ok(detailOrderService.getProfitOfScientificEquipment(argumentStatistical.IdProduct, argumentStatistical.FromDate, argumentStatistical.ToDate));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }

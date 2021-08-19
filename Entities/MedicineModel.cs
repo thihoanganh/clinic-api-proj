@@ -15,11 +15,11 @@ namespace Clinic_Web_Api.Entities
         public string Point { get; set; }
         public string Using { get; set; }
         public string SpecialWarning { get; set; }
-        public DateTime? DateOfManufacture { get; set; }
-        public DateTime? Expiry { get; set; }
-        public bool? Status { get; set; }
-        public string? Origin { get; set; }
-        public string? TypeOf { get; set; }
-        public string? Brand { get; set; }
+        public DateTime DateOfManufacture { get; set; }
+        public DateTime Expiry { get; set; }
+        public bool Status { get; set; }
+        public string Origin { get; set; }
+        public string TypeOf { get; set; }
+        public string Brand { get; set; }
     }
 }

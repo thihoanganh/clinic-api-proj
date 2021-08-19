@@ -8,7 +8,7 @@ using Clinic_Web_Api.Services.Interface;
 
 namespace Clinic_Web_Api.Controllers.Admin
 {
-    [Route("api/receiptscuentificequipmen")]
+    [Route("api/receiptscuentificequipment")]
     public class ReceiptScuentificEquipmentController : Controller
     {
         private IReceiptScientificEquipmentService receiptScientificEquipmentService;

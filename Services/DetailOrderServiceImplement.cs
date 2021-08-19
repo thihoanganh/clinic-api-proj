@@ -1,4 +1,5 @@
 ﻿using Clinic_Web_Api.Entities;
+using Clinic_Web_Api.Helpers;
 using Clinic_Web_Api.Models;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,13 @@ namespace Clinic_Web_Api.Services.Interface
     public class DetailOrderServiceImplement : IDetailOrderService
     {
         private ClinicDbContext db;
+        private StatisticalHelper statisticalHelper;
         private IEnumerable<IPriceService> priceServices;
-        public DetailOrderServiceImplement(ClinicDbContext _db,IEnumerable<IPriceService> _priceService)
+        public DetailOrderServiceImplement(ClinicDbContext _db, IEnumerable<IPriceService> _priceService)
         {
             db = _db;
             priceServices = _priceService;
+            statisticalHelper = new StatisticalHelper(db, priceServices);
         }
 
         public void createDetailOrder(DetailOrderModel detailOrderModel)
@@ -26,7 +29,7 @@ namespace Clinic_Web_Api.Services.Interface
             {
                 try
                 {
-                    Console.WriteLine("sdfsdfsdfsdfsdf");
+
                     DetailOrder detailOrder = new DetailOrder();
                     detailOrder.CustomerId = detailOrderModel.CustomerId;
                     detailOrder.Date = DateTime.Now;
@@ -161,8 +164,8 @@ namespace Clinic_Web_Api.Services.Interface
 
             var receiptScientificOrders = db.ReceiptScientificEquipmentIdOrderDetails.Where(r => r.OrderDetailId == detailOrder.Id).ToList();
 
-            var totalPriceBuy = this.calculatePriceBuyOfExportMedicine(receiptMedicineOrders) + this.calculatePriceBuyOfExportScientific(receiptScientificOrders);
-            var totalPriceSell = this.calculatePriceSellOfExportMedicine(receiptMedicineOrders) + this.calculatePriceSellOfExportScientific(receiptScientificOrders);
+            var totalPriceBuy = statisticalHelper.calculatePriceBuyOfExportMedicine(receiptMedicineOrders) + statisticalHelper.calculatePriceBuyOfExportScientific(receiptScientificOrders);
+            var totalPriceSell = statisticalHelper.calculatePriceSellOfExportMedicine(receiptMedicineOrders) + statisticalHelper.calculatePriceSellOfExportScientific(receiptScientificOrders);
 
             DetailOrderProfit detailOrderProfit = new DetailOrderProfit
             {
@@ -175,58 +178,74 @@ namespace Clinic_Web_Api.Services.Interface
             return detailOrderProfit;
         }
 
-        private double calculatePriceBuyOfExportScientific(List<ReceiptScientificEquipmentIdOrderDetail> receiptScientificsOrders)
+        public List<StatisticalMedicine> getProfitOfMedicine(int medicineId, DateTime fromDate, DateTime toDate)
         {
-            double sumPriceBuy = 0;
-            foreach(var receiptScientificOrder in receiptScientificsOrders)
+            List<StatisticalMedicine> statisticalMedicines = new List<StatisticalMedicine>();
+            String nameMedicine = db.Medicines.Where(m => m.Id == medicineId).Select(m => m.Name).FirstOrDefault();
+            var receiptMedicines = db.ReceiptMedicines.Where(r => r.MedicineId == medicineId ).ToList();
+
+            foreach(var receiptMedicine in receiptMedicines)
             {
-                var priceBuy = db.ReceiptScientificEquipments.Where(r => r.Id == receiptScientificOrder.ReceiptScientificEquipmentId).FirstOrDefault().PriceBuy;
-                sumPriceBuy = (double)(sumPriceBuy + priceBuy * receiptScientificOrder.Amount);
+                var receiptMedicineOrders = db.ReceiptMedicineIdOrderdetails.Where(r => r.ReceiptMedicineId == receiptMedicine.Id && r.Orderdetail.Date <= toDate && r.Orderdetail.Date >=  fromDate).ToList();
+
+                if(receiptMedicineOrders.Count == 0)
+                {
+                    continue;
+                }
+                var totalPriceBuy = statisticalHelper.calculatePriceBuyOfExportMedicine(receiptMedicineOrders);
+                var totalPriceSell = statisticalHelper.calculatePriceSellOfExportMedicine(receiptMedicineOrders);
+
+                var quantity = receiptMedicineOrders.Sum(r => r.Amount);
+                StatisticalMedicine statisticalMedicine = new StatisticalMedicine
+                {
+                    PriceBuy = totalPriceBuy,
+                    PriceSell = totalPriceSell,
+                    NameMedicine = nameMedicine,
+                    Quantity = (int)quantity
+                };
+
+                statisticalMedicines.Add(statisticalMedicine);
             }
-            return sumPriceBuy;
+           
+
+            
+            return statisticalMedicines;
         }
 
-        private double calculatePriceSellOfExportScientific(List<ReceiptScientificEquipmentIdOrderDetail> receiptScientificsOrders)
+        public List<StatisticalScientificEquipment> getProfitOfScientificEquipment(int scientificEquipmentId, DateTime fromDate, DateTime toDate)
         {
-            var priceScientificService = priceServices.SingleOrDefault(s => s.GetType() == typeof(PriceScientificEquipServiceImplement));
-            double sumPriceSell = 0;
-            foreach (var receiptScientificOrder in receiptScientificsOrders)
+            List<StatisticalScientificEquipment> statisticalScientificEquipments = new List<StatisticalScientificEquipment>();
+            String nameMedicine = db.ScientificEquipments.Where(m => m.Id == scientificEquipmentId).Select(m => m.Name).FirstOrDefault();
+            var receiptScientificEquipments = db.ReceiptScientificEquipments.Where(r => r.ScientificEquipmentId == scientificEquipmentId).ToList();
+
+            foreach (var receiptScientificEquipment in receiptScientificEquipments)
             {
-                var receiptScientific = db.ReceiptScientificEquipments.Where(r => r.Id == receiptScientificOrder.ReceiptScientificEquipmentId).FirstOrDefault();
-                var detailOder = db.DetailOrders.Where(r => r.Id == receiptScientificOrder.OrderDetailId).FirstOrDefault();
-                var idProduct = receiptScientific.ScientificEquipmentId;
-                var date = detailOder.Date;
-                var priceSell = priceScientificService.getRecentPriceOfProduct((int)idProduct, (DateTime)date).Price;
-                sumPriceSell = (double)(sumPriceSell + priceSell * receiptScientificOrder.Amount);
+                var receiptScientificEquipmentOrders = db.ReceiptScientificEquipmentIdOrderDetails.
+                    Where(r => r.ReceiptScientificEquipmentId == receiptScientificEquipment.Id && r.OrderDetail.Date <= toDate && r.OrderDetail.Date >= fromDate).ToList();
+
+                if (receiptScientificEquipmentOrders.Count == 0)
+                {
+                    break;
+                }
+                var totalPriceBuy = statisticalHelper.calculatePriceBuyOfExportScientific(receiptScientificEquipmentOrders);
+                var totalPriceSell = statisticalHelper.calculatePriceSellOfExportScientific(receiptScientificEquipmentOrders);
+
+                var quantity = receiptScientificEquipmentOrders.Sum(r => r.Amount);
+                StatisticalScientificEquipment statisticalScientificEquipment = new StatisticalScientificEquipment
+                {
+                    PriceBuy = totalPriceBuy,
+                    PriceSell = totalPriceSell,
+                    NameScientificEquipment = nameMedicine,
+                    Quantity = (int)quantity
+                };
+
+                statisticalScientificEquipments.Add(statisticalScientificEquipment);
             }
-            return sumPriceSell;
+
+
+
+            return statisticalScientificEquipments;
         }
 
-        private double calculatePriceBuyOfExportMedicine(List<ReceiptMedicineIdOrderdetail> receiptMedicineOrders)
-        {
-            double sumPriceBuy = 0;
-            foreach (var receiptMedicineOrder in receiptMedicineOrders)
-            {
-                var priceBuy = db.ReceiptMedicines.Where(r => r.Id == receiptMedicineOrder.ReceiptMedicineId).FirstOrDefault().PriceBuy;
-                sumPriceBuy = (double)(sumPriceBuy + priceBuy * receiptMedicineOrder.Amount);
-            }
-            return sumPriceBuy;
-        }
-
-        private double calculatePriceSellOfExportMedicine(List<ReceiptMedicineIdOrderdetail> receiptMedicineOrders)
-        {
-            var priceMedicineService = priceServices.SingleOrDefault(s => s.GetType() == typeof(PriceMedicineServiceImplement));
-            double sumPriceSell = 0;
-            foreach (var receiptMedicineOrder in receiptMedicineOrders)
-            {
-                var receiptMedicine = db.ReceiptMedicines.Where(r => r.Id == receiptMedicineOrder.ReceiptMedicineId).FirstOrDefault();
-                var detailOder = db.DetailOrders.Where(r => r.Id == receiptMedicineOrder.OrderdetailId).FirstOrDefault();
-                var idProduct = receiptMedicine.MedicineId;
-                var date = detailOder.Date;
-                var priceSell = priceMedicineService.getRecentPriceOfProduct((int)idProduct, (DateTime)date).Price;
-                sumPriceSell = (double)(sumPriceSell + priceSell * receiptMedicineOrder.Amount);
-            }
-            return sumPriceSell;
-        }
     }
 }
