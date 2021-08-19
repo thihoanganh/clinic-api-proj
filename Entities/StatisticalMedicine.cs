@@ -5,14 +5,11 @@ using System.Threading.Tasks;
 
 namespace Clinic_Web_Api.Entities
 {
-    public class DetailOrderProfit
+    public class StatisticalMedicine
     {
-
-        public DateTime Date { get; set; }
+        public String NameMedicine { get; set; }
         public Double PriceBuy { get; set; }
         public Double PriceSell { get; set; }
-        public int CustomerId { get; set; }
-        public int DetailOrderId { get; set; }
-
+        public int Quantity { get; set; }
     }
 }

@@ -28,9 +28,8 @@ namespace Clinic_Web_Api.Services
                 Point = m.Point,
                 Using = m.Using,
                 SpecialWarning = m.SpecialWarning,
-                DateOfManufacture = m.DateOfManufacture,
-                Expiry = m.Expiry,
-                Status = m.Status,
+                DateOfManufacture = (DateTime)m.DateOfManufacture,
+                Status = (bool)m.Status,
                 Origin = m.Origin.Origin1,
                 TypeOf = m.TypeOf.Category,
                 Brand = m.Brand.Brand1
@@ -51,9 +50,8 @@ namespace Clinic_Web_Api.Services
                 Point = m.Point,
                 Using = m.Using,
                 SpecialWarning = m.SpecialWarning,
-                DateOfManufacture = m.DateOfManufacture,
-                Expiry = m.Expiry,
-                Status = m.Status,
+                DateOfManufacture = (DateTime)m.DateOfManufacture,
+                Status = (bool)m.Status,
                 Origin = m.Origin.Origin1,
                 TypeOf = m.TypeOf.Category,
                 Brand = m.Brand.Brand1

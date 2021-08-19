@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Clinic_Web_Api.Models
 {
-    public partial class ClinicDbContext : DbContext
+    public partial class Clinic1Context : DbContext
     {
-        public ClinicDbContext()
+        public Clinic1Context()
         {
         }
 
-        public ClinicDbContext(DbContextOptions<ClinicDbContext> options)
+        public Clinic1Context(DbContextOptions<Clinic1Context> options)
             : base(options)
         {
         }
@@ -48,14 +48,14 @@ namespace Clinic_Web_Api.Models
         public virtual DbSet<TypeOfMedicine> TypeOfMedicines { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserQuiz> UserQuizzes { get; set; }
-        public virtual DbSet<Staff> Staff { get; set; }
+        public virtual DbSet<Staff> staff { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=.;Database=Clinic1;user id=sa;password=123123");
+                optionsBuilder.UseSqlServer("Server=.;Database=Clinic1;Trusted_Connection=True;");
             }
         }
 
@@ -346,6 +346,10 @@ namespace Clinic_Web_Api.Models
                 entity.Property(e => e.Amount).HasColumnName("amount");
 
                 entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.Expiry)
+                    .HasColumnType("datetime")
+                    .HasColumnName("expiry");
 
                 entity.HasOne(d => d.Medicine)
                     .WithMany(p => p.ReceiptMedicines)

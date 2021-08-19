@@ -24,6 +24,7 @@ namespace Clinic_Web_Api.Services
             receiptMedicine.Date = receiptMedicineModel.Date;
             receiptMedicine.PriceBuy = receiptMedicineModel.PriceBuy;
             receiptMedicine.MedicineId = receiptMedicineModel.MedicineId;
+            receiptMedicine.Expiry = receiptMedicineModel.ExpiryDate;
 
             db.Add(receiptMedicine);
             db.SaveChanges();
@@ -39,7 +40,9 @@ namespace Clinic_Web_Api.Services
                 Amount = (int)r.Amount,
                 PriceBuy = (double)r.PriceBuy,
                 Date = (DateTime)r.Date,
-                NameOfMedicine = r.Medicine.Name
+                NameOfMedicine = r.Medicine.Name,
+                ExpiryDate = (DateTime)r.Expiry,
+                MedicineId = (int)r.MedicineId
             }).ToList();
         }
 

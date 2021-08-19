@@ -23,7 +23,6 @@ namespace Clinic_Web_Api.Models
         public string SpecialWarning { get; set; }
         public int? Quantity { get; set; }
         public DateTime? DateOfManufacture { get; set; }
-        public DateTime? Expiry { get; set; }
         public bool? Status { get; set; }
         public int? OriginId { get; set; }
         public int? TypeOfId { get; set; }

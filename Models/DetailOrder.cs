@@ -18,6 +18,8 @@ namespace Clinic_Web_Api.Models
         public double? Discount { get; set; }
         public int? DiscountEventId { get; set; }
         public int? CustomerId { get; set; }
+        public bool? IsPayment { get; set; }
+        public bool? IsExport { get; set; }
 
         public virtual User Customer { get; set; }
         public virtual DiscountEvent DiscountEvent { get; set; }

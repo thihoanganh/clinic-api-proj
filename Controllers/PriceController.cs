@@ -51,5 +51,34 @@ namespace Clinic_Web_Api.Controllers.Admin
                 return BadRequest();
             }
         }
+
+        [HttpPost("createpricescientificEquipment")]
+        [Produces("application/json")]
+        public IActionResult createPriceScientificEquipment([FromBody] PriceModel priceModel)
+        {
+            try
+            {
+                priceScientificService.create(priceModel);
+                return Ok(priceModel);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("getrecentpricescientificEquipment/{id}/{date}")]
+        [Produces("application/json")]
+        public IActionResult GetRecentPriceScientificEquipment(int id, DateTime date)
+        {
+            try
+            {
+                return Ok(priceScientificService.getRecentPriceOfProduct(id, date));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }

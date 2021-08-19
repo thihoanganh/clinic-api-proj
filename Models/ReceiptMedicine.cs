@@ -17,6 +17,7 @@ namespace Clinic_Web_Api.Models
         public double? PriceBuy { get; set; }
         public DateTime? Date { get; set; }
         public int? MedicineId { get; set; }
+        public DateTime? Expiry { get; set; }
 
         public virtual Medicine Medicine { get; set; }
         public virtual ICollection<ReceiptMedicineIdOrderdetail> ReceiptMedicineIdOrderdetails { get; set; }

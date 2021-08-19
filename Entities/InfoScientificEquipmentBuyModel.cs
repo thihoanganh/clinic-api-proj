@@ -7,7 +7,7 @@ namespace Clinic_Web_Api.Entities
 {
     public class InfoScientificEquipmentBuyModel
     {
-        public int ScientificEquipmentId;
-        public int Amount;
+        public int ScientificEquipmentId { get; set; }
+        public int Amount { get; set; }
     }
 }
