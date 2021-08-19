@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -52,7 +53,7 @@ namespace Clinic_Web_Api.Services
         }
         public List<LectureCategory> FindAllCate()
         {
-            return _db.LectureCategories.ToList();
+            return _db.LectureCategories.Include(l => l.Lectures).ToList();
         }
 
         public int DeleteLectureCate(int id)
@@ -196,15 +197,41 @@ namespace Clinic_Web_Api.Services
         {
             return _db.Lectures.Where(l => l.Id == lecId).Include(lec => lec.Cate).Select(lec => new { id = lec.Id, name = lec.Name, sumary = lec.Sumary, content = lec.Content, createdby = lec.CreatedBy, createddate = lec.CreateDate, modifyby = lec.ModifyBy, modifydate = lec.ModifyDate, cateid = lec.CateId, cate_name = lec.Cate.Name }); ;
         }
-        public dynamic FindAllLecture()
+        public (dynamic lecs, int totalPage, int totalLec) FindAllLecture(int page)
         {
-            return _db.Lectures.Include(lec => lec.Cate).Include(lec => lec.Quizzes).Include(lec => lec.LectureComments).Select(lec => new { id = lec.Id, name = lec.Name, sumary = lec.Sumary, content = lec.Content, createdby = lec.CreatedBy, createddate = lec.CreateDate, modifyby = lec.ModifyBy, modifydate = lec.ModifyDate, cateid = lec.CateId, cate_name = lec.Cate.Name, total_quizzes = lec.Quizzes.Count, total_comments = lec.LectureComments.Count });
+            try
+            {
+                var Size = 6;
+                var TotalLec = _db.Lectures.Count();
+                var TotalPage = (int)Math.Ceiling(((double)TotalLec / Size));
+                return (_db.Lectures.Include(lec => lec.Cate).Include(lec => lec.Quizzes).Include(l => l.Attachments).Include(lec => lec.LectureComments).OrderByDescending(l => l.Id).Skip((page - 1) * Size).Take(Size).Select(lec => new
+                {
+                    id = lec.Id,
+                    name = lec.Name,
+                    sumary = lec.Sumary,
+                    content = lec.Content,
+                    createdby = lec.CreatedBy,
+                    createddate = lec.CreateDate,
+                    modifyby = lec.ModifyBy,
+                    modifydate = lec.ModifyDate,
+                    cateid = lec.CateId,
+                    cate_name = lec.Cate.Name,
+                    total_quizzes = lec.Quizzes.Count,
+                    total_comments = lec.LectureComments.Count,
+                    total_attachs = lec.Attachments.Count
+                }), TotalPage, TotalLec);
+            }
+            catch (Exception)
+            {
+                return (null, -1, -1);
+                throw;
+            }
+
         }
         public List<Lecture> FindByCate(int cateId)
         {
             return _db.Lectures.Where(l => l.CateId == cateId).ToList();
         }
-
         public Quiz CreateQuiz(Quiz qz)
         {
             try
@@ -223,11 +250,29 @@ namespace Clinic_Web_Api.Services
             }
 
         }
+
+        public (List<Quiz> quizzes, int totalPage, int totalQuiz) FindAllQuizzes(int page)
+        {
+            try
+            {
+                var Size = 6;
+                var TotalQuiz = _db.Quizzes.Count();
+                var TotalPage = (int)Math.Ceiling(((double)TotalQuiz / Size));
+                return (_db.Quizzes.Include(q => q.Level).OrderByDescending(l => l.Id).Skip((page - 1) * Size).Take(Size).ToList(), TotalPage, TotalQuiz);
+            }
+            catch (Exception)
+            {
+                return (null, -1, -1);
+                throw;
+            }
+
+        }
+
         public dynamic GetLectureQuizzes(int lecId)
         {
             try
             {
-                return _db.Quizzes.Where(q => q.LectureId == lecId).Select(q => new { duration = q.Duration, level = q.Level.Name, total_question = q.TotalQuestion }).ToList();
+                return _db.Quizzes.Where(q => q.LectureId == lecId).Select(q => new { id = q.Id, duration = q.Duration, level_name = q.Level.Name, total_question = q.TotalQuestion }).ToList();
             }
             catch (Exception)
             {
@@ -265,13 +310,80 @@ namespace Clinic_Web_Api.Services
                 _db.SaveChanges();
                 return userQuiz;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex);
                 return null;
                 throw;
             }
 
         }
+
+        public bool UpdateQuiz(Quiz quiz)
+        {
+            try
+            {
+                var dbQuiz = _db.Quizzes.Where(q => q.Id == quiz.Id).FirstOrDefault();
+                if (dbQuiz == null) return false;
+                else
+                {
+                    _db.Entry(dbQuiz).CurrentValues.SetValues(quiz); // this only work with scalar properties
+                    _db.SaveChanges();
+                    UpdateQuestion(quiz.Questions.ToList());
+                    foreach (var question in quiz.Questions)
+                    {
+                        UpdateAnswer(question.Answers.ToList());
+                    }
+                    return true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return false;
+                throw;
+            }
+        }
+        private void UpdateQuestion(List<Question> questions)
+        {
+            foreach (var qs in questions)
+            {
+                var dbQuestion = _db.Questions.Where(q => q.Id == qs.Id).FirstOrDefault();
+                if (dbQuestion == null)
+                {
+                    _db.Questions.Add(qs);
+
+                }
+                else
+                {
+                    dbQuestion.Name = qs.Name;
+
+                }
+
+            }
+            _db.SaveChanges();
+        }
+
+        private void UpdateAnswer(List<Answer> answers)
+        {
+            foreach (var answer in answers)
+            {
+                var dbAnswer = _db.Answers.Where(q => q.Id == answer.Id).FirstOrDefault();
+                if (dbAnswer == null)
+                {
+                    _db.Answers.Add(answer);
+                }
+                else
+                {
+                    dbAnswer.Content = answer.Content;
+                    dbAnswer.IsCorrect = answer.IsCorrect;
+                }
+            }
+            _db.SaveChanges();
+        }
+
+
 
         public double GetLectureQuizPercent(int lecId, int userId)
         {
@@ -322,7 +434,7 @@ namespace Clinic_Web_Api.Services
         }
         public dynamic GetLectureComments(int lecId)
         {
-            return _db.LectureComments.Where(c => c.LectureId == lecId).Select(cmt => new
+            return _db.LectureComments.Where(c => c.LectureId == lecId).OrderByDescending(c => c.Id).Select(cmt => new
             {
                 id = cmt.Id,
                 content = cmt.Content,
@@ -336,7 +448,7 @@ namespace Clinic_Web_Api.Services
             var quiz = _db.Quizzes.FromSqlInterpolated($"exec GetUserQuiz @UserId={userId},@LectureId={lecId}").AsEnumerable().FirstOrDefault();
             try
             {
-                if (quiz.Id != 0) return _db.Quizzes.Where(q => q.Id == quiz.Id).Include(q => q.Questions).ThenInclude(q => q.Answers).FirstOrDefault();
+                if (quiz.Id != 0) return _db.Quizzes.Where(q => q.Id == quiz.Id).Include(q => q.Level).Include(q => q.Questions).ThenInclude(q => q.Answers).FirstOrDefault();
                 return null;
             }
             catch (Exception)
@@ -347,9 +459,61 @@ namespace Clinic_Web_Api.Services
 
 
         }
+        public List<Lecture> SearchLecture(string term)
+        {
+            try
+            {
+                return _db.Lectures.Where(l => l.Name.Contains(term)).ToList();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
 
 
+        public int DeleteQuiz(int id)
+        {
+            try
+            {
+                var quiz = _db.Quizzes.Find(id);
+                if (quiz == null) return -1;
+                else
+                {
+                    _db.Quizzes.Remove(quiz);
+                    _db.SaveChanges();
+                    return quiz.Id;
+                }
+            }
+            catch (Exception)
+            {
+                return -1;
+                throw;
+            }
+        }
 
+        public dynamic FindQuiz(int id)
+        {
+            return _db.Quizzes.Where(q => q.Id == id).Include(q => q.Level).Include(q => q.Lecture).Include(q => q.Questions).Select(q => new
+            {
+                duration = q.Duration,
+                lectureid = q.LectureId,
+                lecture_name = q.Lecture.Name,
+                level_name = q.Level.Name,
+                levelid = q.LevelId,
+                questions = q.Questions.Select(q => new
+                {
+                    id = q.Id,
+                    name = q.Name,
+                    answers = q.Answers.Select(a => new
+                    {
+                        id = a.Id,
+                        content = a.Content,
+                        iscorrect = a.IsCorrect
+                    })
+                })
+            });
+        }
 
         private bool CheckAnswer(int answerId)
         {

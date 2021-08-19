@@ -80,14 +80,31 @@ namespace Clinic_Web_Api.Services
             return null;
         }
 
-        public (List<Seminar> smns, int totalPage, int totalStaffs) FindAll(int page)
+        public (List<Seminar> smns, int totalPage, int totalStaffs) FindAll(int page, string filter)
         {
             try
             {
                 var Size = 6;
-                var TotalSmn = _db.Seminars.Count();
+                var TotalSmn = 0;
+                List<Seminar> smnRs = new List<Seminar>();
+                if (filter == "coming")
+                {
+                    TotalSmn = _db.Seminars.Where(s => s.EndAt > DateTime.Now).ToList().Count();
+                    smnRs = _db.Seminars.Where(s => s.EndAt > DateTime.Now).Include(s => s.SeminarRegistations).AsNoTracking().Include(s => s.Feedbacks).OrderByDescending(a => a.Id).Skip((page - 1) * Size).Take(Size).ToList();
+                }
+                else if (filter == "closed")
+                {
+                    TotalSmn = _db.Seminars.Where(s => s.EndAt < DateTime.Now).ToList().Count();
+                    smnRs = _db.Seminars.Where(s => s.EndAt < DateTime.Now).Include(s => s.SeminarRegistations).AsNoTracking().Include(s => s.Feedbacks).OrderByDescending(a => a.Id).Skip((page - 1) * Size).Take(Size).ToList();
+
+                }
+                else if (filter == "all")
+                {
+                    TotalSmn = _db.Seminars.Count();
+                    smnRs = _db.Seminars.Include(s => s.SeminarRegistations).AsNoTracking().Include(s => s.Feedbacks).OrderByDescending(a => a.Id).Skip((page - 1) * Size).Take(Size).ToList();
+                }
                 var TotalPage = (int)Math.Ceiling(((double)TotalSmn / Size));
-                return (_db.Seminars.Include(s => s.SeminarRegistations).AsNoTracking().Include(s => s.Feedbacks).OrderByDescending(a => a.Id).Skip((page - 1) * Size).Take(Size).ToList(), TotalPage, TotalSmn);
+                return (smnRs, TotalPage, TotalSmn);
             }
             catch (Exception ex)
             {

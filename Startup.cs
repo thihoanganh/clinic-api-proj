@@ -7,6 +7,7 @@ using Clinic_Web_Api.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +52,12 @@ namespace Clinic_Web_Api
             services.AddScoped<IPriceService, PriceMedicineServiceImplement>();
             services.AddScoped<IPriceService, PriceScientificEquipServiceImplement>();
 
-
+            // max capacity when upload file
+            services.Configure<FormOptions>(options =>
+            {
+                options.MemoryBufferThreshold = Int32.MaxValue;
+                options.MultipartBodyLengthLimit = 200000000;
+            });
 
 
 

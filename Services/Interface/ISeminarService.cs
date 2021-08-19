@@ -13,7 +13,7 @@ namespace Clinic_Web_Api.Services.Interface
         bool UpdateSeminar(Seminar smn);
         Seminar Find(int id);
         List<Seminar> Find(string term);
-        (List<Seminar> smns, int totalPage, int totalStaffs) FindAll(int page);
+        (List<Seminar> smns, int totalPage, int totalStaffs) FindAll(int page, string filter);
         int Register(SeminarRegistation sr);
         List<SeminarRegistation> FindAllRegisterOfSeminar(int smnId);
         int Feedback(Feedback fb);

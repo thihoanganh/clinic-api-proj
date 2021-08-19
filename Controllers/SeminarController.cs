@@ -63,10 +63,9 @@ namespace Clinic_Web_Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll(int page)
+        public IActionResult GetAll(int page, string filter = "all")
         {
-            var rs = _smnService.FindAll(page);
-
+            var rs = _smnService.FindAll(page, filter);
 
             return Ok(new
             {
@@ -87,6 +86,10 @@ namespace Clinic_Web_Api.Controllers
                     totalRegistered = s.SeminarRegistations.Count(),
                     evaluate = _smnService.Evaluate(s.Id)
                 }).ToList()
+                ,
+                totalPage = rs.totalPage,
+                count = rs.smns.Count()
+
             });
         }
 
