@@ -274,7 +274,7 @@ namespace Clinic_Web_Api.Controllers
 
         public IActionResult CreateUserQuiz([FromBody] UserQuizInput uq)
         {
-            if (uq.UserId != 0 && uq.QuizId != 0 && uq.Answers.Length > 0)
+            if (uq.UserId != 0 && uq.QuizId != 0)
             {
                 var quizResult = _lecService.CreateUserQuiz(uq.QuizId, uq.UserId, uq.Answers);
                 if (quizResult != null) return Ok(new
@@ -309,6 +309,22 @@ namespace Clinic_Web_Api.Controllers
             var rs = _lecService.GetRandomQuiz(lecid, userid);
             if (rs == null) return Ok(new { status = false, msg = "There no quiz for this user in this lecture. Try another one !" });
             return Ok(new { status = true, result = rs, total_question = rs.Questions.Count });
+        }
+
+        [HttpGet("user/{id}/quiz")]
+        public IActionResult GetUserQuiz(int id)
+        {
+            return Ok(_lecService.GetUserQuiz(id).Select(q => new
+            {
+                quizId = q.QuizId,
+                userId = q.UserId,
+                totalQuestion = q.TotalQuestion,
+                correctAnswer = q.CorrectAnswer,
+                noAnswer = q.NoAnswer,
+                percent = q.Percent,
+                examinatedDate = q.ExaminatedDate,
+                levelName = q.Quiz.Level.Name
+            }));
         }
 
         [HttpGet("quizzes")]

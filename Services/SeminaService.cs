@@ -25,6 +25,7 @@ namespace Clinic_Web_Api.Services
         {
             try
             {
+                smn.CreatedDate = DateTime.Now;
                 _db.Seminars.Add(smn);
                 _db.SaveChanges();
                 return smn.Id;

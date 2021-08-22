@@ -56,6 +56,18 @@ namespace Clinic_Web_Api.Services
             return _db.LectureCategories.Include(l => l.Lectures).ToList();
         }
 
+        public List<UserQuiz> GetUserQuiz(int id)
+        {
+            try
+            {
+                return _db.UserQuizzes.Where(q => q.UserId == id).Include(q => q.Quiz).ThenInclude(q => q.Level).ToList();
+            }
+            catch (Exception)
+            {
+                return null;
+                throw;
+            }
+        }
         public int DeleteLectureCate(int id)
         {
             try
@@ -179,6 +191,9 @@ namespace Clinic_Web_Api.Services
                 var lec = _db.Lectures.Find(lecture.Id);
                 if (lec != null)
                 {
+                    lecture.ModifyDate = DateTime.Now;
+                    lecture.CreateDate = lec.CreateDate;
+                    lecture.CreatedBy = lec.CreatedBy;
                     _db.Entry(lec).CurrentValues.SetValues(lecture);
                     _db.SaveChanges();
                     return lecture;
@@ -303,7 +318,8 @@ namespace Clinic_Web_Api.Services
                     TotalQuestion = totalQuestion,
                     CorrectAnswer = correctAnswer,
                     NoAnswer = noAnswer,
-                    Percent = resultPercent
+                    Percent = resultPercent,
+                    ExaminatedDate = DateTime.Now
                 };
 
                 _db.UserQuizzes.Add(userQuiz);

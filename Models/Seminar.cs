@@ -22,8 +22,11 @@ namespace Clinic_Web_Api.Models
         public string Place { get; set; }
         public DateTime? StartAt { get; set; }
         public DateTime? EndAt { get; set; }
+        public DateTime? CreatedDate { get; set; }
+
         public string Contact { get; set; }
         public string Poster { get; set; }
+
 
         public virtual ICollection<Feedback> Feedbacks { get; set; }
         public virtual ICollection<SeminarEmail> SeminarEmails { get; set; }

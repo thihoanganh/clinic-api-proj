@@ -25,6 +25,8 @@ namespace Clinic_Web_Api.Services.Interface
         List<Lecture> FindByCate(int cateId);
 
         Quiz CreateQuiz(Quiz qz);
+
+        List<UserQuiz> GetUserQuiz(int id);
         int DeleteQuiz(int id);
         dynamic GetLectureQuizzes(int lecId);
         UserQuiz CreateUserQuiz(int quizId, int userId, int[] userAnswers);

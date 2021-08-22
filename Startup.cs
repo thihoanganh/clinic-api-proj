@@ -44,6 +44,7 @@ namespace Clinic_Web_Api
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISeminarService, SeminaService>();
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IMailSupportService, MailSupportService>();
             services.AddTransient<ILectureService, LectureService>();
 
             services.AddScoped<IReceiptMedicineService, ReceiptMedicineServiceImplement>();

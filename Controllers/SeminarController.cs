@@ -78,6 +78,7 @@ namespace Clinic_Web_Api.Controllers
                     content = s.Content,
                     place = s.Place,
                     startAt = s.StartAt,
+                    createdDate = s.CreatedDate,
                     endAt = s.EndAt,
                     contact = s.Content,
                     poster = Path.Combine("https://localhost:5001", @"seminar/image", s.Poster),

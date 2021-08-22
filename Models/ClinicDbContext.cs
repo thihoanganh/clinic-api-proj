@@ -23,6 +23,8 @@ namespace Clinic_Web_Api.Models
         public virtual DbSet<DetailOrder> DetailOrders { get; set; }
         public virtual DbSet<DiscountEvent> DiscountEvents { get; set; }
         public virtual DbSet<Feedback> Feedbacks { get; set; }
+        public virtual DbSet<MailSupport> MailSupports { get; set; }
+
         public virtual DbSet<Lecture> Lectures { get; set; }
         public virtual DbSet<LectureCategory> LectureCategories { get; set; }
         public virtual DbSet<LectureComment> LectureComments { get; set; }
@@ -99,6 +101,14 @@ namespace Clinic_Web_Api.Models
                     .HasMaxLength(250)
                     .IsUnicode(false)
                     .HasColumnName("Brand");
+            });
+
+            modelBuilder.Entity<MailSupport>(entity =>
+            {
+                entity.ToTable("MailSupport");
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
             });
 
             modelBuilder.Entity<DetailOrder>(entity =>

@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Clinic_Web_Api.Services.Interface
 {
-    public interface IEmailSender
+    public interface IMailSupportService
     {
-        Task<bool> SendEmailAsync(string email, string subject, string htmlMessage);
+        int CreateMailSupport(MailSupport ms);
+        List<MailSupport> FindAll();
     }
 }
